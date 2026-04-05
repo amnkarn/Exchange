@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getDepth, getKlines, getTicker, getTrades } from "../../utils/httpClient";
+import { getDepth, getKlines, getTicker } from "../../utils/httpClient";
 import { BidTable } from "./BidTable";
 import { AskTable } from "./AskTable";
 
@@ -12,8 +12,12 @@ export function Depth({ market }: { market: string }) {
 
     useEffect(() => {
         getDepth(market).then(d => {
-            setBids(d.bids.reverse());
-            setAsks(d.asks);
+            setBids(d.bids.reverse().map(([p, q]: [string, string]) => 
+                [String(parseFloat(p)), String(parseFloat(q))]
+            ));
+            setAsks(d.asks.map(([p, q]: [string, string]) => 
+                [String(parseFloat(p)), String(parseFloat(q))]
+            ));
         });
 
         getTicker(market).then(t => setPrice(t.lastPrice));

@@ -4,6 +4,7 @@ import {
   CrosshairMode,
   ISeriesApi,
   UTCTimestamp,
+  CandlestickSeries
 } from "lightweight-charts";
 
 export class ChartManager {
@@ -58,7 +59,7 @@ export class ChartManager {
       },
     });
     this.chart = chart;
-    this.candleSeries = chart.addCandlestickSeries();
+    this.candleSeries = chart.addSeries(CandlestickSeries);
 
     this.candleSeries.setData(
       initialData.map((data) => ({

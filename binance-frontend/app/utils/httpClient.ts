@@ -65,7 +65,17 @@ export async function getDepth(market: string): Promise<Depth> {
     return response.data;
 }
 
+
 export async function getKlines(market: string, interval: string, startTime: number, endTime: number): Promise<KLine[]> {
-    const response = await axios.get(`${BASE_URL}/klines?symbol=${toSymbol(market)}&interval=${interval}&startTime=${startTime}&endTime=${endTime}`);
-    return response.data;
+    const response = await axios.get(`${BASE_URL}/klines?symbol=${toSymbol(market)}&interval=${interval}&startTime=${startTime * 1000}&endTime=${endTime * 1000}`);
+    
+    return response.data.map((x: any[]) => ({
+        open: x[1],
+        high: x[2],
+        low: x[3],
+        close: x[4],
+        volume: x[5],
+        start: x[0],   // open time (ms)
+        end: x[6],     // close time (ms)
+    }));
 }
