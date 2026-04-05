@@ -59,3 +59,11 @@ export function CheckBoxInput({id}: {id: string}) {
         />
     )
 }
+
+export default function ChartTopButton({name, onClick, isActive}: {name: string, onClick?: any, isActive?: boolean}) {
+    return (
+        <button className={`px-2.5 py-1 rounded-lg cursor-pointer transition-colors ${isActive ? "bg-blue-600 text-white" : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"}`} onClick={onClick}> 
+            {name}
+        </button>
+    )
+}

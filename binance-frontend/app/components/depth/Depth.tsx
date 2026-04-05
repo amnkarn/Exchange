@@ -33,7 +33,7 @@ export function Depth({ market }: { market: string }) {
             });
 
             getTicker(market).then(t => setPrice(t.lastPrice));
-        }, 1500)
+        }, 3500)
 
     }, [market]) //run on every market update
 
