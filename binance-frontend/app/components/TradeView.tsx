@@ -50,7 +50,7 @@ export function TradeView({ market }: { market: string }) {
                     })),
                 ].sort((x, y) => (x.timestamp < y.timestamp ? -1 : 1)) || [],
                 {
-                    background: "#0e0f14",
+                    background: "#14151B",
                     color: "white",
                 }
             );

@@ -36,6 +36,7 @@ export class ChartManager {
         ticksVisible: true,
         borderVisible: true,
       },
+      
       crosshair: {
         mode: CrosshairMode.Normal,
       },
@@ -46,10 +47,12 @@ export class ChartManager {
       },
       grid: {
         horzLines: {
-          visible: false,
+          visible: true,
+          color: "rgba(255, 255, 255, 0.1)",
         },
         vertLines: {
-          visible: false,
+          visible: true,
+          color: "rgba(255, 255, 255, 0.1)",
         },
       },
       layout: {
@@ -62,7 +65,10 @@ export class ChartManager {
     });
     
     this.chart = chart;
-    this.candleSeries = chart.addSeries(CandlestickSeries);
+    this.candleSeries = chart.addSeries(CandlestickSeries, {
+      upColor: "#039E64",
+      downColor: "#CE484B"
+    });
 
     this.candleSeries.setData(
       initialData.map((data) => ({

@@ -4,7 +4,6 @@ import { MarketBar } from "@/app/components/MarketBar";
 import { SwapUI } from "@/app/components/SwapUI";
 import { TradeView } from "@/app/components/TradeView";
 import { useParams } from "next/navigation"
-//import "../../globals.css"
 
 export default function Page() {
     const { market } = useParams(); //ex -> SOL_USDC
