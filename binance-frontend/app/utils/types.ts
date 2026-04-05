@@ -1,4 +1,5 @@
 
+// candlestick type for chart
 export interface KLine {
     close: string;
     end: string;
@@ -11,6 +12,7 @@ export interface KLine {
     volume: string;
 }
 
+// single completed transaction between buyer and seller.
 export interface Trade {
     "id": number,
     "isBuyerMaker": boolean,
@@ -20,12 +22,14 @@ export interface Trade {
     "timestamp": number
 }
 
+// type to shows all asks and bids
 export interface Depth {
     bids: [string, string][],
     asks: [string, string][],
     lastUpdateId: string
 }
 
+// "snapshot" of last 24 hours for a specific coin.
 export interface Ticker {
     "firstPrice": string,
     "high": string,

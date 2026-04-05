@@ -4,25 +4,25 @@ import { getKlines } from "../utils/httpClient";
 import { KLine } from "../utils/types";
 
 export function TradeView({ market }: { market: string }) {
-
     const chartRef = useRef<HTMLDivElement>(null);
     const chartManagerRef = useRef<ChartManager>(null);
 
     const init = async () => {
-        let klineData: KLine[] = [];
+        let klineData: KLine[] = []; //fetch and store in klineData
 
         try {
-            klineData = await getKlines(market, "1h", Math.floor((new Date().getTime() - 1000 * 60 * 60 * 24 * 7) / 1000), Math.floor(new Date().getTime() / 1000));
+            klineData = await getKlines(market, "5m", Math.floor((new Date().getTime() - 1000 * 60 * 60 * 24 * 7) / 1000), Math.floor(new Date().getTime() / 1000));
 
         } catch (e) {
             console.log("Error in TradeView")
         }
 
         if (chartRef) {
-            if (chartManagerRef.current) {
+            if (chartManagerRef.current) { //clear prev chart
                 chartManagerRef.current.destroy();
             }
-            const chartManager = new ChartManager(
+
+            const chartManager = new ChartManager( //create the chart
                 chartRef.current,
                 [
                     ...klineData?.map((x) => ({
@@ -38,14 +38,14 @@ export function TradeView({ market }: { market: string }) {
                     color: "white",
                 }
             );
-            //@ts-ignore
+            
             chartManagerRef.current = chartManager;
         }
     };
 
-    useEffect(() => {
+    useEffect(() => { //on every market switch or firsttime run init() 
         init();
-    }, [market, chartRef]);
+    }, [market]);
 
     return (
         <div ref={chartRef} style={{ height: "520px", width: "100%", marginTop: 4 }}></div>

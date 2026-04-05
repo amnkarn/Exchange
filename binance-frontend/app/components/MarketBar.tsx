@@ -7,8 +7,8 @@ import { getTicker } from "../utils/httpClient";
 export const MarketBar = ({ market }: { market: string }) => {
     const [ticker, setTicker] = useState<Ticker | null>(null);
 
-    useEffect(() => { // fetch the market details
-
+    // fetch the market details using getTicker function in httpClient
+    useEffect(() => {
         getTicker(market).then(setTicker);
 
     }, [market])
@@ -16,11 +16,12 @@ export const MarketBar = ({ market }: { market: string }) => {
     return (
         <div className="flex items-center flex-row relative w-full overflow-hidden border-b border-slate-800">
             <div className="flex items-center justify-between flex-row no-scrollbar overflow-auto pr-4">
-                <Ticker market={market} />
+                <TickerLogo market={market} />
 
-                <div className="flex items-center flex-row space-x-8 pl-4">
+                <div className="flex items-center flex-row space-x-8 pl-4 gap-5">
+
                     <div className="flex flex-col h-full justify-center">
-                        <p className={`font-medium tabular-nums text-greenText text-md text-green-500`}>
+                        <p className={`font-medium tabular-nums text-greenText text-md`}>
                             ${ticker?.lastPrice}
                         </p>
                         <p className="font-medium text-sm tabular-nums">${ticker?.lastPrice}</p>
@@ -55,7 +56,7 @@ export const MarketBar = ({ market }: { market: string }) => {
     )
 }
 
-function Ticker({ market }: { market: string }) {
+function TickerLogo({ market }: { market: string }) { //logo and name of the stock
     return (
         <div className="flex h-15 shrink-0 space-x-4">
             <div className="flex flex-row relative ml-5 -mr-1 gap-4">

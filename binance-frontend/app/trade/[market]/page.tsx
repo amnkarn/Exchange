@@ -24,7 +24,7 @@ export default function Page() {
                     <div className="w-px flex-col border-slate-800 border-l"></div>
 
                     <div className="flex flex-col w-80 min-w-80 overflow-hidden">
-                        {/* Depth table in the right side */}
+                        {/* Depth table(OrderBook) in the right side */}
                         <Depth market={market as string} />
                     </div>
 
