@@ -6,6 +6,7 @@ import { TradeView } from "@/app/components/TradeView";
 import { useParams } from "next/navigation"
 
 
+
 export default function Page() {
     const { market } = useParams();
 
@@ -13,23 +14,13 @@ export default function Page() {
     return (
         <div className="flex flex-row flex-1">
             <div className="flex flex-col flex-1">
+                {/* Bar on the top of TradinView graph */}
                 <MarketBar market={market as string} />
-                <div className="flex flex-row h-155 border-y border-slate-800">
-                    <div className="flex flex-col flex-1">
-                        <TradeView market={market as string} />
-                    </div>
-                    <div className="w-px flex-col border-slate-800 border-l"></div>
-                    <div className="flex flex-col w-62.5 overflow-hidden">
-                        <Depth market={market as string} />
-                    </div>
-                </div>
+
+                
             </div>
             <div className="w-px flex-col border-slate-800 border-l"></div>
-            <div>
-                <div className="flex flex-col w-62.5">
-                    <SwapUI market={market as string} />
-                </div>
-            </div>
+            
         </div>
     )
 }
