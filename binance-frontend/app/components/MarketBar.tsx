@@ -3,15 +3,41 @@ import { useEffect, useState } from "react";
 //@ts-ignore
 import { Ticker } from "../utils/types";
 import { getTicker } from "../utils/httpClient";
+import { SignalingManager } from "../utils/SignalingManager";
 
 export const MarketBar = ({ market }: { market: string }) => {
+
     const [ticker, setTicker] = useState<Ticker | null>(null);
 
-    // fetch the market details using getTicker function in httpClient
     useEffect(() => {
-        getTicker(market).then(setTicker);
+        getTicker(market).then(setTicker); //get data of stock
 
+        //create connection & register for callbacks(information)
+        SignalingManager.getInstance().registerCallback("ticker", (data: Partial<Ticker>)  =>  
+
+            setTicker(prevTicker => ({
+                firstPrice: data?.firstPrice ?? prevTicker?.firstPrice ?? '',
+                high: data?.high ?? prevTicker?.high ?? '',
+                lastPrice: data?.lastPrice ?? prevTicker?.lastPrice ?? '',
+                low: data?.low ?? prevTicker?.low ?? '',
+                priceChange: data?.priceChange ?? prevTicker?.priceChange ?? '',
+                priceChangePercent: data?.priceChangePercent ?? prevTicker?.priceChangePercent ?? '',
+                quoteVolume: data?.quoteVolume ?? prevTicker?.quoteVolume ?? '',
+                symbol: data?.symbol ?? prevTicker?.symbol ?? '',
+                trades: data?.trades ?? prevTicker?.trades ?? '',
+                volume: data?.volume ?? prevTicker?.volume ?? '',
+            })), `TICKER-${market}`
+        );
+
+        // through sendMessage says to send me data
+        SignalingManager.getInstance().sendMessage({"method":"SUBSCRIBE","params":[`ticker.${market}`]}	);
+
+        return () => { //cleanup
+            SignalingManager.getInstance().deRegisterCallback("ticker", `TICKER-${market}`);
+            SignalingManager.getInstance().sendMessage({"method":"UNSUBSCRIBE","params":[`ticker.${market}`]}	);
+        }
     }, [market])
+
 
     return (
         <div className="flex items-center flex-row relative w-full overflow-hidden border-b border-slate-800">
