@@ -4,6 +4,7 @@ import { getDepth, getKlines, getTicker } from "../../utils/httpClient";
 import { BidTable } from "./BidTable";
 import { AskTable } from "./AskTable";
 import { SignalingManager } from "@/app/utils/SignalingManager";
+import { getWSMarket } from "@/app/utils/formatter";
 
 export function Depth({ market }: { market: string }) {
     // three main things for "OrderBook"
@@ -14,6 +15,10 @@ export function Depth({ market }: { market: string }) {
     useEffect(() => {
 
         const sm = SignalingManager.getInstance(); //live listener
+
+        const wsMarket = getWSMarket(market); 
+        const tickerId = `TICKER-${market}`;
+
         //exchange only send updated data
         sm.registerCallback("depth", (data: any) => {
             //console.log(data);
@@ -59,7 +64,7 @@ export function Depth({ market }: { market: string }) {
 
         }, `DEPTH-${market}`)
 
-        sm.sendMessage({"method": "SUBSCRIBE", "params": [`depth.200ms.${market}`]});
+        sm.sendMessage({"method": "SUBSCRIBE", "params": [`depth.200ms.${wsMarket}`]});
 
         // Initial Fetch (The "Now" data)
         getDepth(market).then(d => {
@@ -79,7 +84,7 @@ export function Depth({ market }: { market: string }) {
         return () => { //cleanup
             sm.deRegisterCallback("depth", `DEPTH-${market}`); //remove from callback
             //now don't get the data
-            sm.sendMessage({"method": "UNSUBSCRIBE", "params": [`depth.200ms.${market}`]});
+            sm.sendMessage({"method": "UNSUBSCRIBE", "params": [`depth.200ms.${wsMarket}`]});
         }
 
     }, [market]) //run on every market update
