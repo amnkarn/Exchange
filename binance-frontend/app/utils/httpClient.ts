@@ -45,7 +45,7 @@ export async function getTickers(): Promise<Ticker[]> {
 
 // Fetches the "Order Book", bids[] & asks[]
 export async function getDepth(market: string): Promise<Depth> {
-    const response = await axios.get(`${BASE_URL}/depth?symbol=${toSymbol(market)}&limit=20`);
+    const response = await axios.get(`${BASE_URL}/depth?symbol=${toSymbol(market)}&limit=50`);
     return response.data;
 }
 

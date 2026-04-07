@@ -13,9 +13,8 @@ export const MarketBar = ({ market }: { market: string }) => {
         getTicker(market).then(setTicker); //get data of stock
 
         //create connection & register for callbacks(information)
-        SignalingManager.getInstance().registerCallback("ticker", (data: Partial<Ticker>)  =>  
-
-            setTicker(prevTicker => ({
+        SignalingManager.getInstance().registerCallback("ticker", (data: Partial<Ticker>)  => {
+            setTicker(prevTicker => ({ //exchange send only updated data
                 firstPrice: data?.firstPrice ?? prevTicker?.firstPrice ?? '',
                 high: data?.high ?? prevTicker?.high ?? '',
                 lastPrice: data?.lastPrice ?? prevTicker?.lastPrice ?? '',
@@ -26,10 +25,11 @@ export const MarketBar = ({ market }: { market: string }) => {
                 symbol: data?.symbol ?? prevTicker?.symbol ?? '',
                 trades: data?.trades ?? prevTicker?.trades ?? '',
                 volume: data?.volume ?? prevTicker?.volume ?? '',
-            })), `TICKER-${market}`
-        );
+            }))
+            
+        },`TICKER-${market}`);
 
-        // through sendMessage says to send me data
+        // through sendMessage, it says to send me data
         SignalingManager.getInstance().sendMessage({"method":"SUBSCRIBE","params":[`ticker.${market}`]}	);
 
         return () => { //cleanup
@@ -84,7 +84,7 @@ export const MarketBar = ({ market }: { market: string }) => {
 
 function TickerLogo({ market }: { market: string }) { //logo and name of the stock
     return (
-        <div className="flex h-15 shrink-0 space-x-4">
+        <div className="flex h-14 shrink-0 space-x-4">
             <div className="flex flex-row relative ml-5 -mr-1 gap-4">
                 <img alt="SOL Logo" loading="lazy" decoding="async" data-nimg="1" className="z-10 rounded-full h-6 w-6 mt-4 outline-baseBackgroundL1" src="/sol.webp" />
 

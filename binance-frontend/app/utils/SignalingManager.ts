@@ -56,7 +56,7 @@ export class SignalingManager {
 
                 //loop on them
                 this.callbacks[type].forEach(({ callback }) => {
-                    //map the data according to "tocker"
+                    //map the data according to "ticker"
                     if (type === "ticker") {
                         const newTicker: Partial<Ticker> = {
                             lastPrice: message.data.c,
@@ -80,19 +80,6 @@ export class SignalingManager {
         }
     }
 
-    //send the message to ws or add in waitlist
-    sendMessage(message: any) {
-        const messageToSend = { //message like "SUBSCRIBE" & id
-            ...message,
-            id: this.id++
-        }
-        if (!this.initialized) { //if not initialized or internet is slow
-            this.bufferedMessages.push(messageToSend); //add in waitlist
-            return;
-        }
-        this.ws.send(JSON.stringify(messageToSend));
-    }
-
     // add in callbacks to get the informations
     async registerCallback(type: string, callback: CallbackFunction, id: string) {
         this.callbacks[type] = this.callbacks[type] || [];
@@ -108,5 +95,18 @@ export class SignalingManager {
                 this.callbacks[type].splice(index, 1);
             }
         }
+    }
+
+    //send the message to ws or add in waitlist
+    sendMessage(message: any) {
+        const messageToSend = { //message like "SUBSCRIBE" & id
+            ...message,
+            id: this.id++
+        }
+        if (!this.initialized) { //if not initialized or internet is slow
+            this.bufferedMessages.push(messageToSend); //add in waitlist
+            return;
+        }
+        this.ws.send(JSON.stringify(messageToSend));
     }
 }

@@ -9,12 +9,12 @@ export default function Page() {
     const { market } = useParams(); //ex -> SOL_USDC
 
     return (
-        <div className="flex flex-row flex-1 overflow-hidden">
+        <div className="flex flex-row flex-1 h-screen overflow-hidden">
             <div className="flex flex-col flex-1">
                 {/* Bar on the top of TradinView graph */}
                 <MarketBar market={market as string} />
 
-                <div className="flex flex-row h-155 border-y border-slate-800">
+                <div className="flex flex-row flex-1 border-y overflow-hidden border-slate-800">
                     <div className="flex flex-col flex-1 px-2">
                         {/* Trading view chart */}
                         <TradeView market={market as string} />
@@ -22,11 +22,10 @@ export default function Page() {
 
                     <div className="w-px flex-col border-slate-800 border-l"></div>
 
-                    <div className="flex flex-col w-80 min-w-80 overflow-hidden">
-                        {/* Depth table(OrderBook) in the right side */}
+                    <div className="flex flex-col w-80 min-w-80">
+                        {/* OrderBook in the right side */}
                         <Depth market={market as string} />
                     </div>
-
                 </div>
             </div>
 
