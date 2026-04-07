@@ -47,7 +47,7 @@ export function SwapUI({ market }: { market: string }) {
 
                                     <div className="flex flex-row absolute right-1 top-1 p-2">
                                         <div className="relative">
-                                            <img src="/usdc.webp" className="w-6 h-6" />
+                                            <img src="https://backpack.exchange/coins/usd.svg" className="w-6 h-6" />
                                         </div>
                                     </div>
                                 </div>
@@ -85,7 +85,7 @@ export function SwapUI({ market }: { market: string }) {
                             </div>
                         </div>
 
-                        <button type="button" className="font-semibold  focus:ring-blue-200 focus:none focus:outline-none text-center h-12 rounded-xl text-base px-4 py-2 my-4 bg-greenPrimaryButtonBackground text-greenPrimaryButtonText active:scale-98" data-rac="">
+                        <button type="button" className="font-semibold  focus:ring-blue-200 focus:none focus:outline-none text-center h-12 rounded-xl text-base px-4 py-2 my-4 bg-greenPrimaryButtonBackground text-greenPrimaryButtonText active:scale-98 cursor-pointer">
                             Buy
                         </button>
 

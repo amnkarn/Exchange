@@ -43,7 +43,7 @@ export function SellButton({ activeTab, setActiveTab }: { activeTab: string, set
 
 export function PersentButton({ persent }: { persent: string }) {
     return (
-        <div className="flex items-center justify-center flex-row rounded-full px-4 py-1.5 text-xs cursor-pointer bg-baseBackgroundL2 hover:bg-baseBackgroundL3">
+        <div className="flex items-center justify-center flex-row rounded-full px-4 py-1.5 text-xs cursor-pointer bg-baseBackgroundL2  hover:bg-green-400 hover:text-black">
             { persent }
         </div>
     )

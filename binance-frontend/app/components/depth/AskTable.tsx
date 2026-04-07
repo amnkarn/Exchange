@@ -58,7 +58,7 @@ function Ask({ price, quantity, total, maxTotal }: { price: string, quantity: st
             }}
             ></div>
             <div className="flex justify-between text-[13px] text-zinc-300 w-full relative">
-                <div> {price} </div>
+                <div className="text-[#D64347]"> {price} </div>
                 <div> {quantity} </div>
                 <div> {total?.toFixed(2)} </div>
             </div>

@@ -85,11 +85,6 @@ export function TradeView({ market }: { market: string }) {
         return () => clearInterval(interval);
     })
 
-    //useEffect(() => { //on every market switch or firstime run init() 
-    //    init();
-    //}, [market]);
-
-
 
     return (
         <div className="w-full">

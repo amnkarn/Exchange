@@ -13,7 +13,10 @@ export const MarketBar = ({ market }: { market: string }) => {
         getTicker(market).then(setTicker); //get data of stock
 
         //create connection & register for callbacks(information)
-        SignalingManager.getInstance().registerCallback("ticker", (data: Partial<Ticker>)  => {
+
+        const sm = SignalingManager.getInstance(); //live listener
+        
+        sm.registerCallback("ticker", (data: Partial<Ticker>)  => {
             setTicker(prevTicker => ({ //exchange send only updated data
                 firstPrice: data?.firstPrice ?? prevTicker?.firstPrice ?? '',
                 high: data?.high ?? prevTicker?.high ?? '',
@@ -30,11 +33,11 @@ export const MarketBar = ({ market }: { market: string }) => {
         },`TICKER-${market}`);
 
         // through sendMessage, it says to send me data
-        SignalingManager.getInstance().sendMessage({"method":"SUBSCRIBE","params":[`ticker.${market}`]}	);
+        sm.sendMessage({"method":"SUBSCRIBE","params":[`ticker.${market}`]}	);
 
         return () => { //cleanup
-            SignalingManager.getInstance().deRegisterCallback("ticker", `TICKER-${market}`);
-            SignalingManager.getInstance().sendMessage({"method":"UNSUBSCRIBE","params":[`ticker.${market}`]}	);
+            sm.deRegisterCallback("ticker", `TICKER-${market}`);
+            sm.sendMessage({"method":"UNSUBSCRIBE","params":[`ticker.${market}`]}	);
         }
     }, [market])
 
