@@ -44,7 +44,7 @@ export default function AccountPage() {
                 </div>
             </div>
 
-            <TradeCard />
+            <TradeCard active={active} />
 
         </div>
     )

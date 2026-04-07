@@ -2,10 +2,11 @@ import Image from "next/image";
 import Header from "./components/landing/header";
 import { HeroPage } from "./components/landing/HeroPage";
 import AccountPage from "./components/landing/AccountPage";
+import Explore from "./components/landing/Explore";
 
 export default function Home() {
   return (
-    <main className="w-full bg-[#0E0F14]  pb-20">
+    <main className="w-full bg-[#0E0F14]">
       <header>
         <Header />
       </header>
@@ -13,6 +14,7 @@ export default function Home() {
       <main>
         <HeroPage />
         <AccountPage />
+        <Explore />
       </main>
 
       <footer>

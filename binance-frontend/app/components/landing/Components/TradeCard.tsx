@@ -1,10 +1,20 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 
-export default function TradeCard() {
+export default function TradeCard({active}: {active: number}) {
     return (
         <div className="bg-[#16181E] w-[45%] mt-10 rounded-3xl px-10 pt-8 overflow-hidden">
             <div className="scale-100 hover:scale-102 transition-transform">
+                { active === 1 ? <TradeSideComp /> :  <InvestSideComp /> }
+            </div>
+
+        </div>
+    )
+}
+
+function TradeSideComp() {
+    return (
+        <>
             <div className="flex flex-col gap-5">
                 <h2 className="text-2xl font-bold">Trade</h2>
                 <p className="text-[#939CAC] text-sm">The most capital-efficient margin system in crypto. Perps, spot, and predictions — all cross-margined, all earning yield.</p>
@@ -18,12 +28,28 @@ export default function TradeCard() {
             </div>
 
             <BuySellComponent />
-            </div>
-
-        </div>
+        </>
     )
 }
 
+function InvestSideComp() {
+    return (
+        <div className="flex flex-col gap-5">
+            <h2 className="text-2xl font-bold">Invest</h2>
+            <p className="text-[#939CAC] text-sm">
+                Lending, fiat rails, and stocks (coming soon) - a better home for your money. Earn yield without thinking about it.
+            </p>
+
+            <div className="w-full flex gap-1 mt-3">
+                <MiniTags para="Lending" />
+                <MiniTags para="Flat On/Of Ramps" />
+                <MiniTags para="Stocks (Coming soon)" />
+            </div>
+
+            <MarketDets />
+        </div>
+    )
+}
 
 function MiniTags({ para }: { para: string }) {
     return (
@@ -163,6 +189,80 @@ function BuyAndSellInput({ title, rightTitle, inputValue, img }: BuySellInput) {
             <div className="flex justify-between bg-[#191A20] px-5 py-2.5 rounded-lg">
                 <input type="text" disabled placeholder={inputValue} className="placeholder-white" />
                 <img src={img} alt="img" className="w-6" />
+            </div>
+        </div>
+    )
+}
+
+function MarketDets() {
+    return (
+        <div className="py-5 px-5 my-10 bg-black rounded-2xl">
+            <div className="flex justify-between">
+                <p className="text-sm text-gray-400">Account</p>
+                <p className="text-sm text-gray-400">Balance</p>
+                <p className="text-sm text-gray-400">APY</p>
+            </div>
+
+            <div className="flex gap-55 py-2 text-sm">
+                <p>Crypto</p>
+                <p>$49,329.23</p>
+            </div>
+
+            <div className="flex flex-col">
+                <StockDets 
+                    stock="USD"
+                    img="https://backpack.exchange/coins/usd.svg"
+                    balance="9,816.87"
+                    secondBal="$9,816.87"
+                    API="3.11%"
+                    secondAPI="~$305.30/yr"
+                />
+                <StockDets 
+                    stock="SOL"
+                    img="../../../../sol.webp"
+                    balance="331.04"
+                    secondBal="$28,997.54"
+                    API="5.45%"
+                    secondAPI="~$1,580.37/yr"
+                />
+                <StockDets 
+                    stock="ETH"
+                    img="../../../../eth.webp"
+                    balance="2.705"
+                    secondBal="$9,514.82"
+                    API="1.88%"
+                    secondAPI="~$178.88/yr"
+                />
+            </div>
+        </div>
+    )
+}
+
+interface StockDetails {
+    stock: string,
+    img: string,
+    balance: string,
+    secondBal: string,
+    API: string,
+    secondAPI: string
+}
+
+function StockDets(props: StockDetails) {
+    return (
+        <div className="ml-3 flex justify-between">
+            <div className="flex gap-2 items-center">
+                <img src={props.img} className="w-6" />
+                <h4 className="font-semibold text-sm">{props.stock}</h4>
+            </div>
+
+            <div className="flex flex-col pl-12 text-end">
+                <p className="text-sm text-white">{props.balance}</p>
+                <p className="text-xs text-gray-400">{props.secondBal}</p>
+            </div>
+
+            <div className="flex flex-col justify-center text-end">
+                <p className="text-sm text-green-500">{props.API}</p>
+                <p className="text-[10px] text-green-700">{props.secondAPI}</p>
             </div>
         </div>
     )
