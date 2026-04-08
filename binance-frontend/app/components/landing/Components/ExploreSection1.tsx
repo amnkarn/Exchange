@@ -1,9 +1,9 @@
-import PointStruct from "./PointStructureForExplorePage"
+import SectionsInfo from "./SectionInfo"
 
 
 export default function Sec1() {
     return (
-        <div className="w-full py-10 flex gap-20 justify-center">
+        <div className="w-full py-10 mt-30 flex gap-20 justify-center">
             <div className="text-white flex flex-col items-center justify-center gap-10 bg-[#14151B] w-[35%]">
                 <svg
                     viewBox="-12 0 544 280"
@@ -92,7 +92,7 @@ export default function Sec1() {
             </div>
 
             <div className="w-[35%]">
-                <Sec1Info
+                <SectionsInfo
                     headingLabel="Yield on Everything"
                     heading="Yield on everything — even your PnL"
                     para="Earn passively while you trade. Backpack combines spot, perps, and lending into one margin system so your capital keeps working in real time."
@@ -100,40 +100,9 @@ export default function Sec1() {
                     point2="Yield on PnL from open positions"
                     point3="Boosted treasury rates on USD"
                     point4="Native staking rewards on assets like SOL"
+                    tickBGColor="#1A2B1F"
+                    tickColor="#05df72"
                 />
-
-            </div>
-        </div>
-    )
-}
-
-
-interface Info {
-    headingLabel: string,
-    heading: string,
-    para: string,
-    point1: string,
-    point2: string,
-    point3: string,
-    point4?: string,
-}
-
-function Sec1Info(props: Info) {
-    return (
-        <div className="w-full rounded-2xl shadow-lg shadow-gray-900">
-            <div className="flex flex-col bg-[#111117] py-8 gap-5 ">
-                <div className="px-3 py-1 w-fit rounded-2xl bg-[#1A2B1F] text-green-400 text-[10px] border border-gray-700">{props.headingLabel}</div>
-
-                <div className="text-3xl text-white font-semibold">{props.heading}</div>
-
-                <p className="text-gray-400 text-sm">{props.para}</p>
-
-                <div className="flex flex-col gap-2 pt-2">
-                    <PointStruct point={props.point1} tickBGColor="#1A2B1F" tickColor={"#05df72"}/>
-                    <PointStruct point={props.point2} tickBGColor="#1A2B1F" tickColor={"#05df72"}/>
-                    <PointStruct point={props.point3} tickBGColor="#1A2B1F" tickColor={"#05df72"}/>
-                    <PointStruct point={props.point4} tickBGColor="#1A2B1F" tickColor={"#05df72"}/>
-                </div>
             </div>
         </div>
     )

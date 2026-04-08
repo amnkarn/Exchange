@@ -12,13 +12,13 @@ export default function Sec2Box() {
                 <div className="flex flex-col gap-3 mt-5">
                     <OverviewWithProgressBar
                         title="Initial Margin"
-                        progressWidth="10"
+                        progressWidth={35}
                         progress="24%"
                     />
 
                     <OverviewWithProgressBar
                         title="Maintenance Margin"
-                        progressWidth="8"
+                        progressWidth={25}
                         progress="18%"
                     />
                 </div>
@@ -63,7 +63,7 @@ export default function Sec2Box() {
     )
 }
 
-interface ReportBar {title: string, progressWidth: string, progress: string}
+interface ReportBar {title: string, progressWidth: number, progress: string}
 
 function OverviewWithProgressBar(props: ReportBar) {
     return (
@@ -72,7 +72,7 @@ function OverviewWithProgressBar(props: ReportBar) {
 
             <div className="flex gap-4 items-center">
                 <div className="w-30 h-2 rounded-2xl bg-baseBorderLight">
-                    <div className={`w-${props.progressWidth} h-1.5 rounded-l-2xl bg-[#00C278]`}></div>
+                    <div className={`h-1.5 rounded-l-2xl bg-[#00C278]`} style={{width: props.progressWidth}} ></div>
                 </div>
                 <p className="text-xs text-white">{props.progress}</p>
             </div>
