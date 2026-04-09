@@ -3,6 +3,7 @@ import Header from "./components/landing/header";
 import { HeroPage } from "./components/landing/HeroPage";
 import AccountPage from "./components/landing/AccountPage";
 import Explore from "./components/landing/Explore";
+import { Footer } from "./components/Footer";
 
 export default function Home() {
   return (
@@ -18,7 +19,7 @@ export default function Home() {
       </main>
 
       <footer>
-
+        <Footer />
       </footer>
 
     </main>

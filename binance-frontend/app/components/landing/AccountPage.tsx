@@ -17,7 +17,7 @@ export default function AccountPage() {
             </div>
 
             <div className="flex flex-col gap-5 items-center justify-center mt-20 w-[50%]">
-                <h1 className="text-5xl font-[600] font-interFam text-[#FD4B4E] tracking-tight">
+                <h1 className="text-5xl font-[600px] font-interFam text-[#FD4B4E] tracking-tight">
                     Trade
                     <span className="text-white">.</span> &thinsp;
                     Invest
@@ -26,7 +26,7 @@ export default function AccountPage() {
                     <span className="text-white">.</span>
                 </h1>
 
-                <h1 className="flex text-5xl font-[600] font-interFam text-white tracking-tight">All from one account.</h1>
+                <h1 className="flex text-5xl font-[600px] font-interFam text-white tracking-tight">All from one account.</h1>
 
 
                 <p className="text-[#939CAC] text-[20px] pt-5 px-5 text-center text-base/relaxed">
