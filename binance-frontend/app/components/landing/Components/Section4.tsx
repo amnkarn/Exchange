@@ -36,7 +36,7 @@ function Sec4Details() {
 
             <div className="flex flex-col gap-2 pt-8">
                 {sec4DivList.map((dets) =>
-                    <div onClick={() => setSelectedId(dets.serial)}>
+                    <div onClick={() => setSelectedId(dets.serial)} key={dets.serial}>
                         <Sec4ListDiv
                             serial={dets.serial}
                             mainHead={dets.heading}

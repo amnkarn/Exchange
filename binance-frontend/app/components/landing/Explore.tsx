@@ -1,7 +1,9 @@
+"use client";
 import Sec1 from "./Components/ExploreSection1"
 import Sec2 from "./Components/Section2"
 import Sec3 from "./Components/Section3"
 import Sec4 from "./Components/Section4"
+import { Sec5 } from "./Components/Section5";
 
 
 export default function Explore() {
@@ -17,8 +19,8 @@ export default function Explore() {
             <Sec1 />
             <Sec2 />
             <Sec3 />
-
             <Sec4 />
+            <Sec5 />
         </div>
     )
 }
