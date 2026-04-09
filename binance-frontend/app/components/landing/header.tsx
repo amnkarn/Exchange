@@ -1,4 +1,5 @@
-
+"use client"
+import { useRouter } from "next/navigation";
 
 export default function Header() {
     return (
@@ -29,19 +30,39 @@ export default function Header() {
 }
 
 function NavOptions() {
+    const router = useRouter();
+
+    function scrollToWallet() {
+        const walletSection = document.getElementById("walletSection");
+        if(walletSection) {
+            walletSection.scrollIntoView({ behavior: 'smooth' })
+        }
+    }
+
     return (
         <div className="flex px-6 py-2.5 gap-7 border-2 border-gray-700 rounded-full text-sm bg-[#1B1D26]/80 backdrop-blur-md ml-14">
-            <div className="text-white opacity-60 hover:opacity-100 cursor-pointer">Markets</div>
-            <div className="text-white opacity-60 hover:opacity-100 cursor-pointer">Crypto</div>
-            <div className="text-white opacity-60 hover:opacity-100 cursor-pointer">Futeres</div>
-            <div className="text-white opacity-60 hover:opacity-100 cursor-pointer">Lend</div>
+            <div className="text-white opacity-60 hover:opacity-100 cursor-pointer" onClick={() => {
+                router.push("/markets")
+            }}>Markets</div>
+
+            <div className="text-white opacity-60 hover:opacity-100 cursor-pointer" onClick={() => {
+                router.push("/trade/BTC_USD")
+            }}>Crypto</div>
+
+            <div className="text-white opacity-60 hover:opacity-100 cursor-pointer" onClick={() => {
+                router.push("/trade/BTC_USD_PERP")
+            }}>Futeres</div>
+
+            <div className="text-white opacity-60 hover:opacity-100 cursor-pointer" onClick={() => {
+                router.push("/lend")
+            }}>Lend</div>
 
             <div className="text-white relative flex cursor-no-drop pr-7">
                 <p className="opacity-60 hover:opacity-100">Stocks</p>
                 <span className="px-1 py-1 bg-[#192A2C] opacity-100 text-green-400 absolute top-[-5] right-[-12] text-[9px] font-extralight">SOON</span>
             </div>
 
-            <div className="text-white opacity-60 hover:opacity-100 cursor-pointer">Wallet</div>
+            <div className="text-white opacity-60 hover:opacity-100 cursor-pointer" onClick={scrollToWallet}>Wallet</div>
         </div>
     )
 }

@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Header from "./components/landing/header";
 import { HeroPage } from "./components/landing/HeroPage";
 import AccountPage from "./components/landing/AccountPage";

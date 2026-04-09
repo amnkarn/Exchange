@@ -52,10 +52,10 @@ export function Footer() {
           <h6 className="text-gray-400">Privacy</h6>
         </div>
         <div className="flex gap-4 text-2xl pr-20 text-gray-400">
-          <i className="fa-brands fa-x-twitter"></i>
-          <i className="fa-brands fa-discord"></i>
-          <i className="fa-brands fa-linkedin"></i>
-          <i className="fa-brands fa-reddit"></i>
+          <i className="fa-brands fa-x-twitter cursor-pointer hover:text-white hover:scale-105 transition-transform"></i>
+          <i className="fa-brands fa-discord cursor-pointer hover:text-white hover:scale-105 transition-transform"></i>
+          <i className="fa-brands fa-linkedin cursor-pointer hover:text-white hover:scale-105 transition-transform"></i>
+          <i className="fa-brands fa-reddit cursor-pointer hover:text-white hover:scale-105 transition-transform"></i>
         </div>
       </div>
 
@@ -73,7 +73,9 @@ function FooterLinks({mainLink, links} : Links) {
   return (
     <div className="flex flex-col gap-2">
       <h5 className="text-white text-xs">{mainLink}</h5>
-      { links.map((link, index) => <h5 key={index} className="text-[#75798A] text-xs">{link}</h5> )}
+      { links.map((link, index) => 
+        <h5 key={index} className="text-[#75798A] text-xs hover:text-gray-200 cursor-pointer">{link}</h5> 
+      )}
     </div>
   )
 }

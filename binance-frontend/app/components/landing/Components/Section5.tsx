@@ -4,7 +4,7 @@ import PointStruct from "./PointStructureForExplorePage";
 
 export function Sec5() {
     return (
-        <div className="w-full flex flex-col items-center justify-center bg-[#0F1116] border-t border-gray-800">
+        <div className="w-full flex flex-col items-center justify-center bg-[#0F1116] border-t border-gray-800" id="walletSection">
             <Headings />
 
             <div className="w-full flex items-center justify-between pl-40">

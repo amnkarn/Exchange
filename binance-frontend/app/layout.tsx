@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   title: "Exchange app",
   description: "Exchange app",
   icons: {
-    icon: 'https://cdn.prod.website-files.com/66e480f0e9eccea9c231ce92/6839e3bc01620952b0aff662_Backpack-logo.png'
+    icon: 'https://s2.coinmarketcap.com/static/img/exchanges/200x200/9452.png'
   },
 };
 
