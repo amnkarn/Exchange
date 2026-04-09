@@ -51,11 +51,13 @@ function AccountOverview() {
                                 logo="M"
                                 heading="Main"
                                 volume="$12,450.32"
+                                loader={true}
                             />
                             <AccountOverviewDiv
                                 logo="P"
                                 heading="Perps"
                                 volume="$8,271.50"
+                                loader={true}
                             />
                         </div>
 
@@ -63,6 +65,7 @@ function AccountOverview() {
                             logo="M"
                             heading="Margin"
                             volume="$3,890.00"
+                            loader={false}
                         />
 
                         <div className="flex items-center justify-between px-5 py-2">
@@ -76,11 +79,13 @@ function AccountOverview() {
                                 logo="S"
                                 heading="SOL Grid"
                                 volume="$2,150.75"
+                                loader={false}
                             />
                             <AccountOverviewDiv
                                 logo="P"
                                 heading="Perps Grid"
                                 volume="$5,430.00"
+                                loader={false}
                             />
                         </div>
                     </div>
@@ -90,9 +95,9 @@ function AccountOverview() {
     )
 }
 
-function AccountOverviewDiv({logo, heading, volume}: {logo: string, heading: string, volume: string}) {
+function AccountOverviewDiv({logo, heading, volume, loader}: {logo: string, heading: string, volume: string, loader: boolean}) {
     return (
-        <div className="w-fit bg-[#14151b] rounded-xl my-2 pt-2 hover:bg-[#171920] border border-gray-800 cursor-pointer">
+        <div className="w-[48%] bg-[#14151b] rounded-xl my-2 pt-2 hover:bg-[#171920] border border-gray-800 cursor-pointer">
             <div className="flex items-center justify-between px-3">
                 <div className="p-1.5 px-2.5 bg-amber-950 rounded-full text-sm">{logo}</div>
                 <span className="material-symbols-outlined text-gray-400 text-sm">more_vert</span>
@@ -104,7 +109,7 @@ function AccountOverviewDiv({logo, heading, volume}: {logo: string, heading: str
                     <p className="text-xs text-gray-400 pt-1">{volume}</p>
                 </div>
 
-                <div className="p-2 rounded-full border-3 border-t-green-500"></div>
+                { loader && <div className="p-2 rounded-full border-3 border-t-green-500"></div> }
             </div>
         </div>
     )

@@ -1,8 +1,7 @@
 import Sec1 from "./Components/ExploreSection1"
-import SectionsInfo from "./Components/SectionInfo"
 import Sec2 from "./Components/Section2"
-import Sec2Box from "./Components/Section2Box"
 import Sec3 from "./Components/Section3"
+import Sec4 from "./Components/Section4"
 
 
 export default function Explore() {
@@ -19,7 +18,7 @@ export default function Explore() {
             <Sec2 />
             <Sec3 />
 
-            
+            <Sec4 />
         </div>
     )
 }
