@@ -1,192 +1,96 @@
+"use client"
+import { useEffect, useState } from "react"
+import Loader from "../Loader";
 
 
 export function Main() {
+    const [allStokes, setAllStokes] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        async function fetchStokeData() {
+            try {
+                const res = await fetch("/api/lend")
+                const data = await res.json();
+                //console.log(data);
+                //@ts-ignore
+                setAllStokes(data);
+                setLoading(false);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        fetchStokeData();
+        const interval = setInterval(fetchStokeData, 1000 * 60 * 2);
+
+        return () => clearInterval(interval);
+    }, [])
+
     return (
         <div className="flex w-full items-center justify-center bg-black">
-            <Stokes />
+            <Stokes loading={loading} allStokes={allStokes} />
         </div>
     )
 }
 
 
-function Stokes() {
-    const Stokes = [
-        {
-            logo: "https://backpack.exchange/coins/paxg.svg",
-            stoke: "PAX Gold", stk: "PAXG",
-            supply: "264.4", spy: "$1.2M",
-            borrow: "39.1", brw: "$186.7k",
-            utilization: "14.77%",
-            lendApy: "30.19%",
-            borrowApy: "1.48%",
-        },
-        {
-            logo: "../../../mon.webp",
-            stoke: "Monal", stk: "MON",
-            supply: "32.6M", spy: "$1.0M",
-            borrow: "3.8M", brw: "$121.9k",
-            utilization: "11.68%",
-            lendApy: "13.37%",
-            borrowApy: "1.36%",
-        },
-        {
-            logo: "../../../sol.webp",
-            stoke: "Solana", stk: "SOL",
-            supply: "406.4k", spy: "$34.1M",
-            borrow: "164.6", brw: "$13.8k",
-            utilization: "40.52%",
-            lendApy: "4.97%",
-            borrowApy: "2.32%",
-        },
-        {
-            logo: "../../../usdc.webp",
-            stoke: "Us Doller", stk: "USD",
-            supply: "133.5M", spy: "$133.5M",
-            borrow: "26.1M", brw: "$26.06M",
-            utilization: "19.54%",
-            lendApy: "4.21%",
-            borrowApy: "1.55%",
-        },
-        {
-            logo: "../../../sui.webp",
-            stoke: "Sui", stk: "SUI",
-            supply: "444.2K", spy: "$414.9K",
-            borrow: "171.5K", brw: "$160.2k",
-            utilization: "38.62%",
-            lendApy: "1.77%",
-            borrowApy: "5.41%",
-        },
+function Stokes({loading, allStokes}: {loading: boolean, allStokes: any[]}) {
+    if(loading) {
+        return <Loader />
+    }
+    //console.log(allStokes)
 
-        {
-            logo: "https://backpack.exchange/coins/paxg.svg",
-            stoke: "PAX Gold", stk: "PAXG",
-            supply: "264.4", spy: "$1.2M",
-            borrow: "39.1", brw: "$186.7k",
-            utilization: "14.77%",
-            lendApy: "30.19%",
-            borrowApy: "1.48%",
-        },
-        {
-            logo: "../../../mon.webp",
-            stoke: "Monal", stk: "MON",
-            supply: "32.6M", spy: "$1.0M",
-            borrow: "3.8M", brw: "$121.9k",
-            utilization: "11.68%",
-            lendApy: "13.37%",
-            borrowApy: "1.36%",
-        },
-        {
-            logo: "../../../sol.webp",
-            stoke: "Solana", stk: "SOL",
-            supply: "406.4k", spy: "$34.1M",
-            borrow: "164.6", brw: "$13.8k",
-            utilization: "40.52%",
-            lendApy: "4.97%",
-            borrowApy: "2.32%",
-        },
-        {
-            logo: "../../../usdc.webp",
-            stoke: "Us Doller", stk: "USD",
-            supply: "133.5M", spy: "$133.5M",
-            borrow: "26.1M", brw: "$26.06M",
-            utilization: "19.54%",
-            lendApy: "4.21%",
-            borrowApy: "1.55%",
-        },
-        {
-            logo: "../../../sui.webp",
-            stoke: "Sui", stk: "SUI",
-            supply: "444.2K", spy: "$414.9K",
-            borrow: "171.5K", brw: "$160.2k",
-            utilization: "38.62%",
-            lendApy: "1.77%",
-            borrowApy: "5.41%",
-        },
-
-        {
-            logo: "https://backpack.exchange/coins/paxg.svg",
-            stoke: "PAX Gold", stk: "PAXG",
-            supply: "264.4", spy: "$1.2M",
-            borrow: "39.1", brw: "$186.7k",
-            utilization: "14.77%",
-            lendApy: "30.19%",
-            borrowApy: "1.48%",
-        },
-        {
-            logo: "../../../mon.webp",
-            stoke: "Monal", stk: "MON",
-            supply: "32.6M", spy: "$1.0M",
-            borrow: "3.8M", brw: "$121.9k",
-            utilization: "11.68%",
-            lendApy: "13.37%",
-            borrowApy: "1.36%",
-        },
-        {
-            logo: "../../../sol.webp",
-            stoke: "Solana", stk: "SOL",
-            supply: "406.4k", spy: "$34.1M",
-            borrow: "164.6", brw: "$13.8k",
-            utilization: "40.52%",
-            lendApy: "4.97%",
-            borrowApy: "2.32%",
-        },
-        {
-            logo: "../../../usdc.webp",
-            stoke: "Us Doller", stk: "USD",
-            supply: "133.5M", spy: "$133.5M",
-            borrow: "26.1M", brw: "$26.06M",
-            utilization: "19.54%",
-            lendApy: "4.21%",
-            borrowApy: "1.55%",
-        },
-        {
-            logo: "../../../sui.webp",
-            stoke: "Sui", stk: "SUI",
-            supply: "444.2K", spy: "$414.9K",
-            borrow: "171.5K", brw: "$160.2k",
-            utilization: "38.62%",
-            lendApy: "1.77%",
-            borrowApy: "5.41%",
-        },
-    ]
+    //const Images: string[] = [
+    //    "https://backpack.exchange/coins/paxg.svg", 
+    //    "../../../mon.webp", 
+    //    "../../../sol.webp", 
+    //    "../../../usdc.webp", 
+    //    "../../../sui.webp", 
+    //    "https://backpack.exchange/coins/paxg.svg", 
+    //    "../../../mon.webp", 
+    //    "../../../sol.webp", 
+    //    "../../../usdc.webp", 
+    //    "../../../sui.webp", 
+    //    "https://backpack.exchange/coins/paxg.svg", 
+    //    "../../../mon.webp", 
+    //    "../../../sol.webp", 
+    //    "../../../usdc.webp", 
+    //    "../../../sui.webp",
+    //]
 
     return (
         <div className="w-full py-5 px-5">
-            <div className="bg-[#14151B] pt-5  border border-gray-800 rounded-2xl">
-
+            <div className="bg-[#14151B] pt-5 border border-gray-800 rounded-2xl">
                 <div className="px-5">
-                    <h3 className=" font-bold">Borrow Lend Markets</h3>
+                    <h3 className="font-bold">Borrow Lend Markets</h3>
                 </div>
 
                 <div className="pt-2">
                     <div className="w-full flex items-center justify-between text-[11px] text-gray-400 border-b border-gray-800 pb-3 pt-1 px-5">
-                        <div className="pr-40">
-                            <h4>Asset</h4> </div>
+                        <div className="pr-40"><h4>Asset</h4></div>
                         <h4>Market Supply</h4>
                         <h4>Market Borrowed</h4>
                         <h4>Utilization</h4>
-                        <h4 className="flex items-center">
-                            <span className="material-symbols-outlined">arrow_downward_alt</span> Lend APY
-                        </h4>
+                        <h4>Lend APY</h4>
                         <h4>Borrow APY</h4>
-                        <h4></h4>
                         <h4></h4>
                     </div>
 
-                    <div className="w-full flex flex-col gap-2">
-                        {Stokes.map((stoke, index) =>
+                    <div className="w-full flex flex-col gap-2">   
+                        {allStokes.map((stoke, index) =>
                             <StokeDets
-                                logo={stoke.logo}
-                                stoke={stoke.stoke}
-                                stokeShort={stoke.stk}
-                                supply={stoke.supply}
-                                spy={stoke.spy}
-                                borrowed={stoke.borrow}
-                                brwd={stoke.brw}
-                                utilisation={stoke.utilization}
-                                lendApy={stoke.lendApy}
-                                borrowedApy={stoke.borrowApy}
                                 key={index}
+                                logo={`https://backpack.exchange/coins/${stoke.symbol?.toLowerCase()}.svg`}
+                                stoke={stoke.symbol}
+                                stokeShort={stoke.symbol}
+                                supply={stoke.totalDeposits}
+                                spy={stoke.totalDepositsValue}
+                                borrowed={stoke.borrowedQuantity}
+                                brwd={stoke.totalBorrowsValue}
+                                utilisation={stoke.utilizationRate}
+                                lendApy={stoke.depositApy}
+                                borrowedApy={stoke.borrowApy}
                             />
                         )}
                     </div>
