@@ -23,4 +23,4 @@ export declare const bookWithQuantity: {
     };
 };
 export {};
-//# sourceMappingURL=orderbook.d.ts.map
+//# sourceMappingURL=order.d.ts.map

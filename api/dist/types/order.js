@@ -7,4 +7,4 @@ export const bookWithQuantity = {
     bids: {},
     asks: {}
 };
-//# sourceMappingURL=orderbook.js.map
+//# sourceMappingURL=order.js.map
