@@ -103,8 +103,8 @@ interface HeroImg {
 
 function HeroImg({ img, heading, para, button, onPrev, onNext, idx, length, setIdx }: HeroImg) {
     return (
-        <div className="w-[90%] place-self-center border border-gray-900 px-20 rounded-2xl relative">
-            <div className="relative">
+        <div className="w-[90%] place-self-center px-20 rounded-2xl relative">
+            <div className="relative border-2 border-gray-900">
                 <span
                     className="material-symbols-outlined absolute top-[45%] left-5 text-3xl! text-gray-400 cursor-pointer"
                     onClick={onPrev}
@@ -127,7 +127,7 @@ function HeroImg({ img, heading, para, button, onPrev, onNext, idx, length, setI
                 <h5 className="text-lg text-gray-400">{para}</h5>
 
                 {button &&
-                    <div className="text-black font-medium px-5 py-3 mt-3 bg-white rounded-xl w-fit">
+                    <div className="text-black font-medium px-5 py-3 mt-3 bg-white rounded-xl w-fit cursor-pointer">
                         {button}
                     </div>
                 }
