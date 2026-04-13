@@ -5,6 +5,8 @@ const depthRouter: Router = express.Router();
 
 depthRouter.get("/", async (req, res) => {
     const { symbol } = req.query;
+
+    //get data from 
     const responce = await RedisManager.getInstance().sendAndAwait({
         type: "GET_DEPTH",
         data: {
