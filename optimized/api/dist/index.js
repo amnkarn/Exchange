@@ -9,11 +9,11 @@ const app = express();
 const PORT = 3000;
 app.use(cors());
 app.use(express.json());
-app.get("/api/v1/order", orderRouter);
-app.get("/api/v1/depth", depthRouter);
-app.get("/api/v1/trades", tradeRouter);
-app.get("/api/v1/klines", klineRouter);
-app.get("/api/v1/tickers", tickerRouter);
+app.use("/api/v1/order", orderRouter);
+app.use("/api/v1/depth", depthRouter);
+app.use("/api/v1/trades", tradeRouter);
+app.use("/api/v1/klines", klineRouter);
+app.use("/api/v1/tickers", tickerRouter);
 app.listen(PORT, () => {
     console.log(`app is listning on port ${PORT}`);
 });

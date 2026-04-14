@@ -2,10 +2,10 @@ import express, { Router, type Request, type Response } from "express"
 import { Client } from "pg";
 
 const pgClient = new Client({
-    user: 'your_user',
-    host: 'database',
-    database: 'my_database',
-    password: 'your_password',
+    user: 'postgres',
+    host: 'localhost',
+    database: 'Exchange',
+    password: 'Backend@987',
     port: 5432,
 });
 
@@ -24,11 +24,11 @@ klineRouter.get("/", async (req: Request, res: Response) => {
             break;
         
         case '1h':
-            query = `SELECT * FROM klines_1m WHERE bucket >= $1 AND bucket <= $2`;
+            query = `SELECT * FROM klines_1h WHERE bucket >= $1 AND bucket <= $2`;
             break;
         
         case '1w':
-            query = `SELECT * FROM klines_1m WHERE bucket >= $1 AND bucket <= $2`;
+            query = `SELECT * FROM klines_1w WHERE bucket >= $1 AND bucket <= $2`;
             break;
         
         default:

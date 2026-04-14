@@ -1,6 +1,7 @@
 import { type RedisClientType, createClient } from "redis";
 import { type MessageFromOrderbook } from "./types/index.js";
 import { type MessageToEngine } from "./types/to.js";
+const url = "redis://localhost:6379";
 
 export class RedisManager {
     private client: RedisClientType;
@@ -8,8 +9,8 @@ export class RedisManager {
     private static instance: RedisManager;
 
     private constructor() {
-        this.client = createClient(); //Dedicated Listener
-        this.publisher = createClient(); //Dedicated Sender
+        this.client = this.client = createClient({ url }); //Dedicated Listener
+        this.publisher = createClient({ url }); //Dedicated Sender
 
         //create client & publisher connection
         this.client.connect();

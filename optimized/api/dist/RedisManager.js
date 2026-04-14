@@ -1,13 +1,14 @@
 import { createClient } from "redis";
 import {} from "./types/index.js";
 import {} from "./types/to.js";
+const url = "redis://localhost:6379";
 export class RedisManager {
     client;
     publisher;
     static instance;
     constructor() {
-        this.client = createClient(); //Dedicated Listener
-        this.publisher = createClient(); //Dedicated Sender
+        this.client = this.client = createClient({ url }); //Dedicated Listener
+        this.publisher = createClient({ url }); //Dedicated Sender
         //create client & publisher connection
         this.client.connect();
         this.publisher.connect();
@@ -22,6 +23,7 @@ export class RedisManager {
     sendAndAwait(message) {
         return new Promise((resolve) => {
             const id = this.getRandomClientId();
+            console.log(id);
             //engine pulish result on this id
             //this will catch that msg
             this.client.SUBSCRIBE(id, (message) => {
