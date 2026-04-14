@@ -1,0 +1,1 @@
+{"root":["./src/redismanager.ts","./src/index.ts","./src/config/db.ts","./src/routes/depth.route.ts","./src/routes/kline.route.ts","./src/routes/order.route.ts","./src/routes/ticker.routes.ts","./src/routes/trade.route.ts","./src/types/index.ts","./src/types/order.ts","./src/types/orderbook.ts","./src/types/to.ts"],"version":"6.0.2"}

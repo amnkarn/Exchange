@@ -1,0 +1,52 @@
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css");
+@import "tailwindcss";
+
+:root {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@font-face {
+  font-family: 'interFam';
+  src: url('/fonts/InterVar.woff2') format('truetype');
+}
+
+@theme {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  --font-interFam: 'interFam', sans-serif;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  /* Backgrounds */
+  --color-greenBackgroundTransparent: rgba(0, 194, 120, 0.12);
+  --color-redBackgroundTransparent: rgba(234, 56, 59, 0.12);
+  --color-baseBackgroundL2: rgb(32, 33, 39);
+  --color-baseBackgroundL3: rgb(32, 33, 39);
+
+  /* Buttons */
+  --color-greenPrimaryButtonBackground: rgb(0, 194, 120);
+  --color-greenPrimaryButtonText: rgb(20, 21, 27);
+
+  /* Borders */
+  --color-redBorder: rgba(234, 56, 59, 0.5);
+  --color-greenBorder: rgba(0, 194, 120, 0.4);
+  --color-baseBorderMed: #2b3139;
+  --color-baseBorderLight: rgb(32, 33, 39);
+  --color-baseBorderFocus: #4a4f5a;
+  --color-accentBlue: rgb(76, 148, 255);
+
+  /* Text */
+  --color-baseTextHighEmphasis: rgb(244, 244, 246);
+  --color-baseTextMedEmphasis: #848e9c;
+  --color-greenText: rgb(0, 194, 120);
+  --color-redText: rgb(234, 56, 59);
+}
