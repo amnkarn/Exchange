@@ -6,11 +6,13 @@ export class RedisManager {
     publisher;
     static instance;
     constructor() {
-        this.client = createClient();
+        this.client = createClient(); //Dedicated Listener
+        this.publisher = createClient(); //Dedicated Sender
+        //create client & publisher connection
         this.client.connect();
-        this.publisher = createClient();
         this.publisher.connect();
     }
+    //save from re-connection, "Singleton paattern"
     static getInstance() {
         if (!this.instance) {
             this.instance = new RedisManager();
@@ -20,10 +22,13 @@ export class RedisManager {
     sendAndAwait(message) {
         return new Promise((resolve) => {
             const id = this.getRandomClientId();
-            this.client.subscribe(id, (message) => {
-                this.client.unsubscribe(id);
+            //engine pulish result on this id
+            //this will catch that msg
+            this.client.SUBSCRIBE(id, (message) => {
+                this.client.UNSUBSCRIBE(id); //unsubscribe this id after any reply
                 resolve(JSON.parse(message));
             });
+            //push in list "message"(Redis Queue)
             this.publisher.lPush("message", JSON.stringify({ clientId: id, message }));
         });
     }

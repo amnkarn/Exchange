@@ -1,13 +1,47 @@
-Trading mein lakhon orders aate hain. 
-Agar API server khud hi order match karne baith gaya, toh server "hang" ho jayega.
+# 🎒 Backpack Exchange Clone
 
-API ka kaam: Sirf request lena aur queue mein daalna.
-Engine ka kaam: Sirf math calculate karke order match karna.
-sendAndAwait in dono alag-alag duniya ko jodta hai. 
-API request bhej kar bhool nahi jata, balki intezaar (Await) karta hai jab tak Engine reply na karde.
+A high-performance, real-time cryptocurrency trading interface built with **React**, **TypeScript**, and **WebSockets**. This project focuses on low-latency order book updates and precise trade execution visualization.
 
-# Summary (Asli Flow)API: 
-    sendAndAwait call karo.
-    Redis: Order queue mein gaya.
-    Engine: Order uthaya --> Match kiya --> Result Publish kiya usi id par.
-    API: Result suna --> Resolve kiya --> User ko screen par dikha "Order Successful!".
+---
+
+## ⚡ Features
+
+- **Live Order Book**: Real-time visualization of Bids and Asks using WebSocket streams.
+- **Aggressive Trade Logic**: LTP (Last Traded Price) coloring based on trade execution (Buy at Ask = Green, Sell at Bid = Red).
+- **High Performance**: Optimized rendering to handle high-frequency tick data without UI lag.
+- **Backpack UI/UX**: Clean, minimalist, and dark-themed interface inspired by the Backpack Exchange.
+
+---
+
+## 🏗️ Technical Architecture
+
+### 1. Data Flow
+- **WebSocket Consumer**: Connects to the exchange's pub/sub server.
+- **OrderBook Sorter**: Automatically sorts Bids (descending) and Asks (ascending) to find the 'Best' prices.
+- **Spread Calculation**: Real-time calculation of the gap between the highest Bid and lowest Ask.
+
+### 2. LTP & Color Logic
+The center price (LTP) color is determined by market aggression:
+- **Green** (`#22c55e`): Triggered when a trade hits the **Best Ask**, indicating aggressive buying.
+- **Red** (`#ef4444`): Triggered when a trade hits the **Best Bid**, indicating aggressive selling.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend**: [Next.js](https://nextjs.org) / React
+- **Language**: [TypeScript](https://typescriptlang.org)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com)
+- **State**: React Hooks (useState, useEffect, useMemo)
+- **Icons**: Lucide React
+
+---
+
+## 💻 Getting Started
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com
+   cd backpack-clone

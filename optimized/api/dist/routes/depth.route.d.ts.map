@@ -1,1 +1,1 @@
-{"version":3,"file":"depth.route.d.ts","sourceRoot":"","sources":["../../src/routes/depth.route.ts"],"names":[],"mappings":"AAAA,OAAgB,EAAE,MAAM,EAAE,MAAM,SAAS,CAAA;AAGzC,QAAA,MAAM,WAAW,EAAE,MAAyB,CAAC;AAe7C,eAAe,WAAW,CAAC"}
+{"version":3,"file":"depth.route.d.ts","sourceRoot":"","sources":["../../src/routes/depth.route.ts"],"names":[],"mappings":"AAAA,OAAgB,EAAE,MAAM,EAAE,MAAM,SAAS,CAAA;AAGzC,QAAA,MAAM,WAAW,EAAE,MAAyB,CAAC;AAkB7C,eAAe,WAAW,CAAC"}
