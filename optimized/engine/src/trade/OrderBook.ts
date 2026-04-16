@@ -2,9 +2,9 @@ import { BASE_CURRENCY } from "./Engine.js"
 
 export interface Order {
     price: number
-    quantity: number
+    quantity: number //original size
     orderId: string
-    filled: number
+    filled: number //progress
     side: 'sell' | 'buy'
     userId: string
 }
@@ -18,8 +18,8 @@ export interface Fill {
 }
 
 export class Orderbook {
-    bids: Order[];
-    asks: Order[];
+    bids: Order[]; //buyers
+    asks: Order[]; //sellers
     baseAsset: string;
     quoteAsset: string = BASE_CURRENCY;
     latestTradeId: number;
@@ -50,32 +50,49 @@ export class Orderbook {
     addOrder(order: Order): { executedQty: number, fills: Fill[] } {
 
         if (order.side === 'buy') {
-            const {executedQty, fills} = this.matchBid(order);
-            order.filled = executedQty;
-            if(executedQty === order.quantity) {
+            const { executedQty, fills } = this.matchBid(order);
+            order.filled = executedQty; //this is filled
+
+            if(executedQty === order.quantity) { //if order is filled
                 return {
                     executedQty,
                     fills
                 }
             }
 
-            this.bids.push(order);
+            if(order.filled < order.quantity) {
+                this.bids.push(order);
+
+                //sort bids(highest first)
+                this.bids.sort((a, b) => (
+                    b.price - a.price
+                ))
+            }
+            
             return {
                 executedQty,
                 fills
             }
 
-        } else {
+        } else { // order.side === 'sell'
+
             const { executedQty, fills } = this.matchBid(order);
             order.filled = executedQty;
-            if(executedQty === order.filled) {
+
+            if(executedQty === order.quantity) { //all qty is filled
                 return {
                     executedQty,
                     fills
                 }
             }
 
-            this.bids.push(order);
+            if(order.filled < order.quantity) {
+                this.asks.push(order); //push remaining in asks
+
+                this.asks.sort((a, b) => (
+                    a.price - b.price
+                ))
+            }
 
             return {
                 executedQty,
@@ -85,35 +102,90 @@ export class Orderbook {
         }
     }
 
+    //match the buyer bid from orderbook
     matchBid(order: Order): { fills: Fill[], executedQty: number } {
-        const fills: Fill[] = [];
-        let executedQty = 0;
+        // here order = user want to buy this mush qty
+        // ask = sellers
+        
+        const fills: Fill[] = []; //
+        let executedQty = 0; //this mush qty is buyed by user
 
 
-        for(let i = 0; i < this.asks.length - 1; i++) {
+        for(let i = 0; i < this.asks.length; i++) { //match in all asks
             const ask = this.asks[i];
+            if(!ask) continue;
 
-            if((ask?.price as number) <= order.price && executedQty < order.quantity) {
-                const remainingInOrder = order.quantity - executedQty;
-                const remainingInAsks = (ask?.quantity as number) - (ask?.filled as number);
+            if(ask.price > order.price) break;
+            if(executedQty === order.quantity) break;
+
+            if(ask.price <= order.price && executedQty < order.quantity) {
+                const remainingInOrder = order.quantity - executedQty; //still needs
+                const remainingInAsks = ask.quantity - ask.filled; //seller have qty
+
                 const fillQty = Math.min(remainingInOrder, remainingInAsks);
 
-                executedQty += fillQty;
-                ask?.filled += fillQty;
+                executedQty += fillQty; //add
+                ask.filled += fillQty;
 
-                
+
                 fills.push({
                     price: ask.price.toString(),
                     quantity: fillQty,
-                    tradeId: this.latestTradeId,
-                    otherUserId: ask?.userId,
-                    markerOrderId: ask?.orderId
+                    tradeId: this.latestTradeId++,
+                    otherUserId: ask.userId,
+                    markerOrderId: ask.orderId
                 })
             }
 
-            this.asks = this.asks.filter(ask => ask.filled < ask.quantity);
-            return { fills, executedQty };
         }
+        
+        //Keep asks where filled amount is less than total qty
+        this.bids.filter(ask => ask.filled < ask.quantity);
+
+        //for(let i=0; i < this.bids.length; i++) { //remove filled trades
+        //    if(this.bids[i]?.filled === this.bids[i]?.quantity) {
+        //        this.bids.splice(i, 1);
+        //        i--;
+        //    }
+        //}
+
+        return {
+            fills,
+            executedQty
+        };
+    }
+
+    matchAsk(order: Order): {fills: Fill[], executedQty: number} {
+        const fills: Fill[] = [];
+        let executedQty = 0;
+
+        for(let i = 0; i <this.bids.length; i++) { //match in all bids
+            const bid = this.bids[i];
+            if(!bid) continue;
+            
+            if(bid.price < order.price) break;
+            if(executedQty === order.quantity) break;
+
+            if(bid.price >= order.price && executedQty < order.quantity) {
+                const remainingInOrder = order.quantity - executedQty; // still needs
+                const remainingBids = bid.quantity - bid.filled; //buyer want
+
+                const fillQty = Math.min(remainingInOrder, remainingBids);
+                executedQty += fillQty;
+                bid.filled += fillQty;
+
+                fills.push({
+                    price: bid.price.toString(),
+                    quantity: fillQty,
+                    tradeId: this.latestTradeId++,
+                    otherUserId: bid.userId,
+                    markerOrderId: bid.orderId,
+                })
+            }
+
+        }
+
+        this.asks.filter(bids => bids.filled < bids.quantity);
 
         return {
             fills,
