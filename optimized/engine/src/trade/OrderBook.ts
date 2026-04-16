@@ -193,8 +193,59 @@ export class Orderbook {
         }
     }
 
+    //combine all depth's whose price is same
     getDepth() {
+        //arrays will look like [["price", "totalQuantity"],...]
+        const bids: [string, string][] = [];
+        const asks: [string, string][] = [];
+
+        //const bidsObj = { "500": 10, "600": 25 };
+        const bidsObj: {[key: string]: number} = {};
+        const asksObj: {[key: string]: number} = {};
+
         
+        //add all quantity of same prices in bidsObj 
+        for(let i=0; i<this.bids.length; i++) {
+            const order = this.bids[i];
+            if(!order) continue;
+
+            if(!bidsObj[order.price]) {
+                bidsObj[order.price] = 0;
+            }
+
+            //@ts-ignore
+            bidsObj[order.price] += order.quantity;
+        }
+
+        //add all quantity of same prices in asksObj
+        for(let i=0; i<this.asks.length; i++) {
+            const order = this.asks[i];
+            if(!order) continue;
+
+            if(!asksObj[order.price]) {
+                asksObj[order.price] = 0;
+            }
+
+            //@ts-ignore
+            asksObj[order.price] += order.quantity;
+        }
+
+        //push in bids
+        for(const price in bidsObj) {
+            if(!bidsObj[price]) continue;
+
+            bids.push([price, bidsObj[price]?.toString()]);
+        }
+
+        //push in asks
+        for(const price in asksObj) {
+            if(!asksObj[price]) continue;
+
+            asks.push([price, asksObj[price].toString()]);
+        }
+        
+
+        return {bids, asks};
     }
 
     getOpenOrders(userId: string): Order[] {
