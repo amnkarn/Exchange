@@ -1,6 +1,7 @@
 import { createClient } from "redis";
 import { Engine } from "./trade/Engine.js";
 
+//here infinitely loop is runnig, and we're pulling messages from redis queue
 
 async function main() {
     const engine = new Engine();
@@ -15,7 +16,7 @@ async function main() {
         if(!response) {
             console.log("didn't get response");
         } else {
-            engine.process(JSON.parse(response));
+            engine.process(JSON.parse(response)); //send the req to engine
         }
     }
 }

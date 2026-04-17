@@ -1,3 +1,12 @@
+# Layer	           Analogy	               Why separate it?
+   API	         The Receptionist	      So the Engine doesn't have to deal with user logins or security.
+   Queue	         The Waiting Line	      So the Engine never gets overwhelmed by spikes in traffic.
+   Engine	      The High-Speed Chef	   It only does math. It doesn't talk to users or databases.
+   PubSub/WS	   The Live Broadcast	   To keep the UI fast without slowing down the core logic.
+   DB Processor   The Accountant	         To save records permanently without making the traders wait.
+
+
+
 # 🎒 Backpack Exchange Clone
 
 A high-performance, real-time cryptocurrency trading interface built with **React**, **TypeScript**, and **WebSockets**. This project focuses on low-latency order book updates and precise trade execution visualization.
