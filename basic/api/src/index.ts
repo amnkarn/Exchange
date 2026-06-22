@@ -12,16 +12,13 @@ let GLOBAL_TRADE_ID = 0;
 
 app.post("/api/v1/order", async (req, res) => {
     const order = OrderInputSchema.safeParse(req.body);
-
     if (!order.success) {
         return res.status(400).send(order.error.message);
     }
 
-    //price: at what price, quantity: how many btc, side: Buy or Sell, kind: Order type
     const { baseAsset, quoteAsset, price, quantity, side, type, kind } = order.data;
     const orderId = getOrderId();
 
-    //currently trade in only BTC and currency is only USD
     if (baseAsset !== BASE_ASSET || quoteAsset !== QUOTE_ASSET) {
         return res.status(400).json({
             message: "Invalid base or quote asset"
@@ -35,7 +32,6 @@ app.post("/api/v1/order", async (req, res) => {
         executedQty,
         fills
     })
-
 })
 
 

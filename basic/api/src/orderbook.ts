@@ -5,11 +5,11 @@ interface Order {
     orderId: string,
 }
 
-interface Bid extends Order { //buy order
+interface Bid extends Order {
     side: 'bid'
 }
 
-interface Ask extends Order { //sell order
+interface Ask extends Order {
     side: 'ask'
 }
 
@@ -24,7 +24,14 @@ export const orderbook: OrderBook = { // list of all pending BUY & SELL orders
 }
 
 //it is used to show "Total qty per price" & "Showing market depth"
-export const bookWithQuantity: { bids: {[price: number]: number}; asks: {[price: number]: number}} = {
+export const bookWithQuantity: { 
+    bids: {
+        [price: number]: number
+    }; 
+    asks: {
+        [price: number]: number
+    }
+} = {
     bids: {},
     asks: {}
 }
