@@ -11,12 +11,12 @@ let GLOBAL_TRADE_ID = 0;
 
 
 app.post("/api/v1/order", async (req, res) => {
-    const order = OrderInputSchema.safeParse(req.body);
-    if (!order.success) {
-        return res.status(400).send(order.error.message);
+    const parsedData = OrderInputSchema.safeParse(req.body);
+    if (!parsedData.success) {
+        return res.status(400).send(parsedData.error.message);
     }
 
-    const { baseAsset, quoteAsset, price, quantity, side, type, kind } = order.data;
+    const { baseAsset, quoteAsset, price, quantity, side, type, kind } = parsedData.data;
     const orderId = getOrderId();
 
     if (baseAsset !== BASE_ASSET || quoteAsset !== QUOTE_ASSET) {
@@ -67,15 +67,14 @@ interface FillOrderResponse {
 
 // main function, that tries to match order against existing orders on the book.
 function fillOrder(params: FillOrderParams): FillOrderResponse {
-    const { orderId, price, side, type, kind } = params; //user details
-
-    let { quantity } = params; //user want's this much
-    const fills: Fill[] = []; //used to store every successful trade.
+    const { orderId, price, side, type, kind } = params;
+    let { quantity } = params;
+    const fills: Fill[] = []; //store every successful trade.
     
     const maxFilledQuantity = getFillAmount(price, quantity, side);
     let executedQty = 0; //how much has actually been traded
 
-    if (kind == 'ioc' && maxFilledQuantity < quantity) { // if can't fill the order
+    if (kind == 'ioc' && maxFilledQuantity < quantity) { //if can't fill the order
         return {
             status: "rejected",
             executedQty: maxFilledQuantity,
@@ -85,17 +84,18 @@ function fillOrder(params: FillOrderParams): FillOrderResponse {
 
     if (side === 'buy') {
         // short the asks
-        orderbook.asks.forEach(o => {
+        orderbook.asks.forEach(orderB => {
             //if user price is satisfing orderBook price
-            if (o.price <= price && quantity > 0) {
-                const filledQuantity = Math.min(quantity, o.quantity); //this much qty can be filled
-                o.quantity -= filledQuantity; //seller is done
+            if (orderB.price <= price && quantity > 0) {
+                const filledQuantity = Math.min(quantity, orderB.quantity); //this much qty can be filled
+                orderB.quantity -= filledQuantity; //orderbook seller is done
 
-                //summary me asks[o.price] ko 1 se ghata
-                bookWithQuantity.asks[o.price] = (bookWithQuantity.asks[o.price] || 0) - filledQuantity;
+                //summary me asks[orderB.price] ko 1 se ghata
+                bookWithQuantity.asks[orderB.price] 
+                    = (bookWithQuantity.asks[orderB.price] || 0) - filledQuantity;
 
-                fills.push({ // store in record
-                    price: o.price,
+                fills.push({
+                    price: orderB.price,
                     quantity: filledQuantity,
                     tradeId: GLOBAL_TRADE_ID,
                 })
@@ -103,17 +103,17 @@ function fillOrder(params: FillOrderParams): FillOrderResponse {
                 executedQty += filledQuantity;
                 quantity -= filledQuantity; // still need or quantity filled
 
-                if (o.quantity === 0) { //seller fully filled, remove from orderbook
-                    orderbook.asks.splice(orderbook.asks.indexOf(o), 1);
+                if (orderB.quantity === 0) { //seller fully filled, remove from orderbook
+                    orderbook.asks.splice(orderbook.asks.indexOf(orderB), 1);
                 }
 
-                if (bookWithQuantity.asks[price] === 0) { //delete from summenry if there is no ask
-                    delete bookWithQuantity.asks[price];
+                if (bookWithQuantity.asks[orderB.price] === 0) { //delete from summenry if there is no ask
+                    delete bookWithQuantity.asks[orderB.price];
                 }
             }
         })
 
-        // Place on the book if order not filled, user neek more quantity
+        // Place on the orderbook if all quantity not filled
         if (quantity !== 0) {
             orderbook.bids.push({
                 price,
@@ -125,17 +125,17 @@ function fillOrder(params: FillOrderParams): FillOrderResponse {
             bookWithQuantity.bids[price] = (bookWithQuantity.bids[price] || 0) + quantity; // add in summery
         }
 
-    } else { //side === 'sell'0
-        orderbook.bids.forEach(o => {
-            if (o.price >= price && quantity > 0) {
-                const filledQuantity = Math.min(quantity, o.quantity);
-                o.quantity -= filledQuantity;
+    } else { //side === 'sell'
+        orderbook.bids.forEach(orderB => {
+            if (orderB.price >= price && quantity > 0) {
+                const filledQuantity = Math.min(quantity, orderB.quantity);
+                orderB.quantity -= filledQuantity;
 
                 //reduce bids[price] from summery
                 bookWithQuantity.bids[price] = (bookWithQuantity.bids[price] || 0) - filledQuantity;
 
                 fills.push({ //add in record
-                    price: o.price,
+                    price: orderB.price,
                     quantity: filledQuantity,
                     tradeId: GLOBAL_TRADE_ID
                 })
@@ -143,12 +143,12 @@ function fillOrder(params: FillOrderParams): FillOrderResponse {
                 executedQty += filledQuantity;
                 quantity -= filledQuantity;
 
-                if (o.quantity === 0) { //remove from order summry
-                    orderbook.bids.splice(orderbook.bids.indexOf(o), 1);
+                if (orderB.quantity === 0) { //remove from order summry
+                    orderbook.bids.splice(orderbook.bids.indexOf(orderB), 1);
                 }
 
-                if (bookWithQuantity.bids[price] === 0) { //delete that bid, whose summry is 0
-                    delete bookWithQuantity.bids[price]
+                if (bookWithQuantity.bids[orderB.price] === 0) { //delete that bid, whose summry is 0
+                    delete bookWithQuantity.bids[orderB.price]
                 }
             }
         })
@@ -177,20 +177,21 @@ function fillOrder(params: FillOrderParams): FillOrderResponse {
     }
 }
 
+// check how much quantity can be filled
 function getFillAmount(price: number, quantity: number, side: 'buy' | 'sell'): number {
     let filled = 0;
 
-    if (side == 'buy') { // check how much quantity can be filled
-        orderbook.asks.forEach(o => {
-            if (o.price <= price) {
-                filled += Math.min(quantity, o.quantity);
+    if (side == 'buy') {
+        orderbook.asks.forEach(orderB => {
+            if (orderB.price <= price) {
+                filled += Math.min(quantity, orderB.quantity);
             }
         })
 
-    } else { // side = sell
-        orderbook.bids.forEach(o => {
-            if (o.price >= price) {
-                filled += Math.min(quantity, o.quantity);
+    } else { //sell
+        orderbook.bids.forEach(orderB => {
+            if (orderB.price >= price) {
+                filled += Math.min(quantity, orderB.quantity);
             }
         })
     }

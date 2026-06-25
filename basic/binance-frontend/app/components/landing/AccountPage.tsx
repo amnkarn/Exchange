@@ -30,7 +30,7 @@ export default function AccountPage() {
 
 
                 <p className="text-[#939CAC] text-[20px] pt-5 px-5 text-center text-base/relaxed">
-                    Whether you're a trader executing complex strategies or just want a better place for your money, Backpack delivers more.
+                    Whether youre a trader executing complex strategies or just want a better place for your money, Backpack delivers more.
                 </p>
             </div>
 

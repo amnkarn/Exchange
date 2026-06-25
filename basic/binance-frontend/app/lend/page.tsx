@@ -1,6 +1,6 @@
-import { Footer } from "../components/Footer";
 import { Header } from "../components/Lend/Header";
 import { Main } from "../components/Lend/Main";
+import { Footer } from "../components/Footer";
 
 
 

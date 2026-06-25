@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-//@ts-ignore
 import { Ticker } from "../utils/types";
 import { getTicker } from "../utils/httpClient";
 import { SignalingManager } from "../utils/SignalingManager";
@@ -14,8 +13,8 @@ export const MarketBar = ({ market }: { market: string }) => {
 
         //create connection & register for callbacks(information)
 
-        const sm = SignalingManager.getInstance(); //live listener
-        
+        const sm = SignalingManager.getInstance();
+
         sm.registerCallback("ticker", (data: Partial<Ticker>)  => {
             setTicker(prevTicker => ({ //exchange send only updated data
                 firstPrice: data?.firstPrice ?? prevTicker?.firstPrice ?? '',

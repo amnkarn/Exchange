@@ -59,7 +59,6 @@ export function Depth({ market }: { market: string }) {
                 })
 
                 return Array.from(asksMap.entries());
-                    
             });
 
         }, `DEPTH-${market}`)
