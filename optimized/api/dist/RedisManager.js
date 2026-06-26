@@ -23,7 +23,6 @@ export class RedisManager {
     sendAndAwait(message) {
         return new Promise((resolve) => {
             const id = this.getRandomClientId();
-            console.log(id);
             //engine pulish result on this id
             //this will catch that msg
             this.client.SUBSCRIBE(id, (message) => {
