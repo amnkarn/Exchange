@@ -1,4 +1,4 @@
-import express, { Router, type Request, type Response } from "express"
+import { Router, type Request, type Response } from "express"
 import { Client } from "pg";
 
 const pgClient = new Client({
@@ -11,7 +11,7 @@ const pgClient = new Client({
 
 pgClient.connect();
 
-const klineRouter: Router = express.Router();
+const klineRouter: Router = Router();
 
 klineRouter.get("/", async (req: Request, res: Response) => {
     const { market, interval, startTime, endTime } = req.query;

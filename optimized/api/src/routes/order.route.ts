@@ -1,6 +1,6 @@
 import express, { Router, type Request, type Response } from "express";
 import { RedisManager } from "../RedisManager.js";
-import { CREATE_ORDER, GET_OPEN_ORDERS, type MessageFromOrderbook } from "../types/index.js";
+import { CANCEL_ORDER, CREATE_ORDER, GET_OPEN_ORDERS, type MessageFromOrderbook } from "../types/index.js";
 
 const orderRouter: Router = express.Router();
 
@@ -25,7 +25,7 @@ orderRouter.post("/", async (req: Request, res: Response) => {
 orderRouter.delete("/", async (req: Request, res: Response) => {
     const { orderId, market } = req.body;
     const response: MessageFromOrderbook = await RedisManager.getInstance().sendAndAwait({
-        type: CREATE_ORDER,
+        type: CANCEL_ORDER,
         data: {
             //@ts-ignore;
             orderId,
