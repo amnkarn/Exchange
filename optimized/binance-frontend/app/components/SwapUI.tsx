@@ -28,7 +28,9 @@ export function SwapUI({ market }: { market: string }) {
                         <div className="flex flex-col flex-1 gap-3 text-baseTextHighEmphasis">
                             <div className="flex flex-col gap-3">
                                 <div className="flex items-center justify-between flex-row">
-                                    <p className="text-xs font-normal text-baseTextMedEmphasis">Available Balance</p>
+                                    <p className="text-xs font-normal text-baseTextMedEmphasis">
+                                        Available Balance
+                                    </p>
                                     <p className="font-medium text-xs text-baseTextHighEmphasis">36.94 USDC</p>
                                 </div>
                             </div>

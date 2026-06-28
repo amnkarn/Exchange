@@ -30,7 +30,7 @@ export function TradeView({ market }: { market: string }) {
             klineData = await getKlines(market, chartTimeFrame, chartFrom, chartTill);
 
         } catch (e) {
-            console.log("Error in TradeView")
+            console.log("Error in TradeView", e);
         }
 
         if (chartRef) {
@@ -66,7 +66,8 @@ export function TradeView({ market }: { market: string }) {
         const chartTill = Math.floor(new Date().getTime() / 1000);
         
         const interval = setInterval( async () => {
-            const latestKlines = await getKlines(market, chartTimeFrame, chartFrom, chartTill); //get details from api
+            //get details from api
+            const latestKlines = await getKlines(market, chartTimeFrame, chartFrom, chartTill);
             const latestBar = latestKlines[latestKlines.length - 1]; // find new bar if created
 
             if (chartManagerRef.current && latestBar) {
@@ -79,7 +80,6 @@ export function TradeView({ market }: { market: string }) {
                     time: new Date(latestBar.end).getTime() / 1000,
                 });
             }
-
         }, refreshTime) //refresh on every 5m
 
         return () => clearInterval(interval);

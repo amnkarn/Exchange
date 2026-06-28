@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-//@ts-ignore
 import { Ticker } from "../utils/types";
 import { getTicker } from "../utils/httpClient";
 import { SignalingManager } from "../utils/SignalingManager";
@@ -14,8 +13,8 @@ export const MarketBar = ({ market }: { market: string }) => {
 
         //create connection & register for callbacks(information)
 
-        const sm = SignalingManager.getInstance(); //live listener
-        
+        const sm = SignalingManager.getInstance();
+
         sm.registerCallback("ticker", (data: Partial<Ticker>)  => {
             setTicker(prevTicker => ({ //exchange send only updated data
                 firstPrice: data?.firstPrice ?? prevTicker?.firstPrice ?? '',
@@ -43,7 +42,7 @@ export const MarketBar = ({ market }: { market: string }) => {
 
 
     return (
-        <div className="flex items-center flex-row relative w-full overflow-hidden border-b border-slate-800">
+        <div className="flex items-center flex-row relative w-full overflow-hidden border-b border-slate-800 bg-[#14151B] py-1">
             <div className="flex items-center justify-between flex-row no-scrollbar overflow-auto pr-4">
                 <TickerLogo market={market} />
 

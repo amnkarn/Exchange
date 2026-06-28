@@ -1,14 +1,28 @@
 
 export const BidTable = ({ bids }: { bids: [string, string][] }) => {
     let currentTotal = 0;
-    const relevantBids = bids.slice(0, 15);
+    const relevantBids = bids;
     //console.log(relevantBids);
-    const bidsWithTotal: [string, string, number][] = relevantBids.map(([price, quantity]) => [price, quantity, currentTotal += Number(quantity)]);
+    const bidsWithTotal: [string, string, number][] = [];
+
+    for(let i = relevantBids.length-1; i >= 0 ; i--) {
+        const [price, quantity] = relevantBids[i];
+
+        currentTotal = parseFloat((currentTotal + parseFloat(quantity)).toFixed(5));
+        
+        bidsWithTotal.push([price, quantity, currentTotal]);
+    }
+    //const allBids = relevantBids.
+    const allBids = bidsWithTotal.slice(0, 20);
+
     const maxTotal = relevantBids.reduce((acc, [_, quantity]) => acc + Number(quantity), 0);
 
     return (
         <div>
-            {bidsWithTotal?.map(([price, quantity, total]) => <Bid maxTotal={maxTotal} total={total} key={price} price={price} quantity={quantity} />)}
+            {
+                allBids?.map(([price, quantity, total]) => 
+                    <Bid maxTotal={maxTotal} total={total} key={price} price={price} quantity={quantity} />)
+            }
         </div>
     )
 }
@@ -31,7 +45,7 @@ function Bid({ price, quantity, total, maxTotal }: { price: string, quantity: st
             <div className={`flex justify-between text-[13px] text-zinc-300 w-full`}>
                 <div className="text-[#05AA6C]"> {price} </div>
                 <div> {quantity} </div>
-                <div> {total.toFixed(2)} </div>
+                <div> {total.toFixed(5)} </div>
             </div>
         </div>
     )

@@ -50,3 +50,16 @@ body {
   --color-greenText: rgb(0, 194, 120);
   --color-redText: rgb(234, 56, 59);
 }
+
+@utility no-scrollbar {
+  /* IE and Edge */
+  -ms-overflow-style: none;
+  
+  /* Firefox */
+  scrollbar-width: none;
+  
+  /* Chrome, Safari, and Opera */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}

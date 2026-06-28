@@ -10,11 +10,11 @@ export default function Page() {
 
     return (
         <div className="flex flex-row flex-1 h-screen overflow-hidden">
-            <div className="flex flex-col flex-1">
+            <div className="flex flex-col flex-1 gap-3">
                 {/* Bar on the top of TradinView graph */}
                 <MarketBar market={market as string} />
 
-                <div className="flex flex-row flex-1 border-y overflow-hidden border-slate-800">
+                <div className="flex flex-row flex-1 overflow-hidden">
                     <div className="flex flex-col flex-1 px-2">
                         {/* Trading view chart */}
                         <TradeView market={market as string} />
@@ -22,7 +22,7 @@ export default function Page() {
 
                     <div className="w-px flex-col border-slate-800 border-l"></div>
 
-                    <div className="flex flex-col w-80 min-w-80">
+                    <div className="flex flex-col w-80 min-w-80 h-150 overflow-y-scroll no-scrollbar">
                         {/* OrderBook in the right side */}
                         <Depth market={market as string} />
                     </div>

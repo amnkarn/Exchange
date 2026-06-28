@@ -1,7 +1,7 @@
 
 export const AskTable = ({ asks }: { asks: [string, string][] }) => {
     let currentTotal = 0;
-    const relevantAsks = asks.slice(0, 15);
+    const relevantAsks = asks.slice(0, 20);
 
     relevantAsks.reverse();
     /*
@@ -11,10 +11,13 @@ export const AskTable = ({ asks }: { asks: [string, string][] }) => {
         129.93   10      10
     */
 
-    let asksWithTotal: [string, string, number][] = [];
+    const asksWithTotal: [string, string, number][] = [];
     for (let i = relevantAsks.length - 1; i >= 0; i--) {
         const [price, quantity] = relevantAsks[i];
-        asksWithTotal.push([price, quantity, currentTotal += Number(quantity)]);
+
+        currentTotal = parseFloat((currentTotal + parseFloat(quantity)).toFixed(5)); 
+        
+        asksWithTotal.push([price, quantity, currentTotal]);
     }
     const maxTotal = relevantAsks.reduce((acc, [_, quantity]) => acc + Number(quantity), 0);
 
@@ -58,9 +61,9 @@ function Ask({ price, quantity, total, maxTotal }: { price: string, quantity: st
             }}
             ></div>
             <div className="flex justify-between text-[13px] text-zinc-300 w-full relative">
-                <div className="text-[#D64347]"> {price} </div>
+                <div className="text-[#CC4145]"> {price} </div>
                 <div> {quantity} </div>
-                <div> {total?.toFixed(2)} </div>
+                <div> {total?.toFixed(5)} </div>
             </div>
         </div>
     )

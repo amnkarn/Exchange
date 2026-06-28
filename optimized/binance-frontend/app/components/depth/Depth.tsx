@@ -59,7 +59,6 @@ export function Depth({ market }: { market: string }) {
                 })
 
                 return Array.from(asksMap.entries());
-                    
             });
 
         }, `DEPTH-${market}`)
@@ -68,6 +67,7 @@ export function Depth({ market }: { market: string }) {
 
         // Initial Fetch (The "Now" data)
         getDepth(market).then(d => {
+            console.log(d);
             setBids(d.bids.reverse().map(([p, q]) => [
                 String(parseFloat(p)),
                 String(parseFloat(q))

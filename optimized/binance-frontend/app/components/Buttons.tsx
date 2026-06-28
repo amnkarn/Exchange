@@ -4,7 +4,7 @@ import { Dispatch, SetStateAction } from "react"
 export function LimitButton({ type, setType }: { type: string, setType: Dispatch<SetStateAction<string>> }) {
     return (
         <div className="flex flex-col cursor-pointer justify-center py-2" onClick={() => setType('limit')}>
-            <div className={`text-sm font-medium py-1 border-b-2 ${type === 'limit' ? "border-accentBlue text-baseTextHighEmphasis" : "border-transparent text-baseTextMedEmphasis hover:border-baseTextHighEmphasis hover:text-baseTextHighEmphasis"}`}>
+            <div className={`text-sm font-semibold py-1 border-b-2 ${type === 'limit' ? "border-accentBlue text-baseTextHighEmphasis" : "border-transparent text-baseTextMedEmphasis hover:border-baseTextHighEmphasis hover:text-baseTextHighEmphasis"}`}>
                 Limit
             </div>
         </div>
@@ -14,7 +14,7 @@ export function LimitButton({ type, setType }: { type: string, setType: Dispatch
 export function MarketButton({ type, setType }: { type: string, setType: Dispatch<SetStateAction<string>> }) {
     return (
         <div className="flex flex-col cursor-pointer justify-center py-2" onClick={() => setType('market')}>
-            <div className={`text-sm font-medium py-1 border-b-2 ${type === 'market' ? "border-accentBlue text-baseTextHighEmphasis" : "border-b-2 border-transparent text-baseTextMedEmphasis hover:border-baseTextHighEmphasis hover:text-baseTextHighEmphasis"} `}>
+            <div className={`text-sm font-semibold py-1 border-b-2 ${type === 'market' ? "border-accentBlue text-baseTextHighEmphasis" : "border-b-2 border-transparent text-baseTextMedEmphasis hover:border-baseTextHighEmphasis hover:text-baseTextHighEmphasis"} `}>
                 Market
             </div>
         </div>

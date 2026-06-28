@@ -21,14 +21,14 @@ export class SignalingManager {
 
     // constructor runs when new SignalingManager() is written
     private constructor() {
-        this.ws = new WebSocket(BASE_URL); //new connection
+        this.ws = new WebSocket(BASE_URL);
         this.bufferedMessages = [];
         this.id = 1;
-        this.init(); //called init()
+        this.init();
     }
 
     // create only one connection
-    public static getInstance() { //if connection already exist, return that
+    public static getInstance() {
         if (!this.instance) {
             this.instance = new SignalingManager();
         }
@@ -47,7 +47,7 @@ export class SignalingManager {
 
         // incoming news
         this.ws.onmessage = (event) => {
-            const message = JSON.parse(event.data); //parse the data
+            const message = JSON.parse(event.data);
 
             const type = message.data?.e; //confirm the type
             if(!type) return;
@@ -56,6 +56,7 @@ export class SignalingManager {
 
                 //loop on them
                 this.callbacks[type].forEach(({ callback }) => {
+                    console.log(this.callbacks[type]);
                     //map the data according to "ticker"
                     if (type === "ticker") {
                         const newTicker: Partial<Ticker> = {
