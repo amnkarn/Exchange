@@ -14,7 +14,7 @@ interface UserBalance {
 
 export class Engine {
     private orderBooks: Orderbook[] = [];
-    private balances: Map<string, UserBalance> = new Map();
+    private balances: Map<string, UserBalance> = new Map(); //a new map, to store all balances
 
 
     constructor() {
@@ -32,7 +32,7 @@ export class Engine {
             const snapShotSNAP = JSON.parse(snapshot.toString());
 
             this.orderBooks = snapShotSNAP.orderbooks.map((snapOB: any) => (
-                new Orderbook(snapOB.baseAseet, snapOB.bids, snapOB.asks, snapOB.lastTradeId, snapOB.currentPrice
+                new Orderbook(snapOB.baseAsset, snapOB.bids, snapOB.asks, snapOB.lastTradeId, snapOB.currentPrice
             )))
 
             this.balances = new Map(snapShotSNAP.balances);
@@ -126,6 +126,7 @@ export class Engine {
                         //@ts-ignore
                         this.balances.get(order.userId)[quoteAsset].available += leftQuantity;
                         
+                        //@ts-ignore
                         this.balances.get(order.userId)[quoteAsset].locked -= leftQuantity;
 
                         if(price) {
@@ -212,22 +213,22 @@ export class Engine {
         if(!orderbook) {
             throw new Error("No orderbook found");
         }
-        const baseAseet = market.split("_")[0];
+        const baseAsset = market.split("_")[0];
         const quoteAsset = market.split("_")[1];
         
-        this.checkAndLockFunds(baseAsset, quoteAsset, side, userId, asset, price, quantity);
+        this.checkAndLockFunds(baseAsset!, quoteAsset!, side, userId, quoteAsset!, price, quantity);
 
         const order: Order = {
             price: Number(price),
             quantity: Number(quantity),
-            orderId: Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+            orderId: Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15),
             filled: 0,
             side,
             userId,
         }
 
-        const { fills, executedQty } = this.orderBooks.addOrder(order);
-        this.updateBalance(userId, baseAseet, quoteAsset, side, fills, executedQty);
+        const { executedQty, fills } = orderbook.addOrder(order);
+        this.updateBalance(userId, baseAsset!, quoteAsset!, side, fills, executedQty);
 
         this.createDbTrades(fills, market, userId);
         this.updateDbOrders(order, executedQty, fills, market);
@@ -392,7 +393,43 @@ export class Engine {
     }
 
     checkAndLockFunds(baseAsset: string, quoteAsset: string, side: "buy" | "sell", userId: string, asset: string, price: string, quantity: string) {
+        if(side === "buy") {
+            if((this.balances.get(userId)?.[quoteAsset]?.available || 0) < Number(quantity) * Number(price)) {
+                throw new Error("Insufficient fund");
+            }
 
+            //@ts-ignore
+            this.balances.get(userId)[quoteAsset]?.available = this.balances.get(userId)[quoteAsset]?.available - (Number(quantity) * Number(price))
+
+            //@ts-ignore
+            this.balances.get(userId)[quoteAsset]?.locked = this.balances.get(userId)[quoteAsset]?.locked + (Number(price) * Number(quantity))
+        
+        } else { //"sell"
+            if((this.balances.get(userId)?.[quoteAsset]?.available || 0) < Number(quantity)) {
+                throw new Error("Insufficient fund");
+            }
+
+            //@ts-ignore
+            this.balances.get(userId)[baseAsset]?.available = this.balances.get(userId)[baseAsset]?.available - Number(quantity);
+        
+            //@ts-ignore
+            this.balances.get(userId)[baseAsset]?.locked = this.balances.get(userId)[baseAsset]?.locked + Number(quantity);
+        }
+    }
+
+    onRamp(userId: string, amount: number) {
+        const userBalance = this.balances.get(userId);
+        if(!userBalance) {
+            this.balances.set(userId, {
+                [BASE_CURRENCY]: {
+                    available: amount,
+                    locked: 0,
+                }
+            })
+        } else {
+            //@ts-ignore
+            userBalance[BASE_CURRENCY]?.available += amount;
+        }
     }
 
     setBaseBalances() {
