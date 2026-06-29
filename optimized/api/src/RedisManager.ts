@@ -19,7 +19,7 @@ export class RedisManager {
         this.publisher.connect();
     }
 
-    //"Singleton patern"
+    //Singleton patern
     public static getInstance() {
         if(!this.instance) {
             this.instance = new RedisManager();

@@ -1,4 +1,4 @@
-import express, { Router } from "express";
+import { Router } from "express";
 import { Client } from "pg";
 const pgClient = new Client({
     user: 'postgres',
@@ -8,7 +8,7 @@ const pgClient = new Client({
     port: 5432,
 });
 pgClient.connect();
-const klineRouter = express.Router();
+const klineRouter = Router();
 klineRouter.get("/", async (req, res) => {
     const { market, interval, startTime, endTime } = req.query;
     let query;

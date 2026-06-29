@@ -2,6 +2,7 @@ import { createClient } from "redis";
 import {} from "./types/index.js";
 import {} from "./types/to.js";
 const url = "redis://localhost:6379";
+//RedisManager is a way to talk to engine(matching and other logic), and crate a queue for the sequence wise process(fifo)
 export class RedisManager {
     client;
     publisher;
@@ -13,7 +14,7 @@ export class RedisManager {
         this.client.connect();
         this.publisher.connect();
     }
-    //save from re-connection, "Singleton paattern"
+    //"Singleton patern"
     static getInstance() {
         if (!this.instance) {
             this.instance = new RedisManager();
@@ -23,14 +24,16 @@ export class RedisManager {
     sendAndAwait(message) {
         return new Promise((resolve) => {
             const id = this.getRandomClientId();
-            //engine pulish result on this id
-            //this will catch that msg
-            this.client.SUBSCRIBE(id, (message) => {
-                this.client.UNSUBSCRIBE(id); //unsubscribe this id after any reply
+            //engine will publish result on this id, and we will catch that msg
+            this.client.subscribe(id, (message) => {
+                this.client.unsubscribe(id); //unsubscribe this id after any reply
                 resolve(JSON.parse(message));
             });
             //push in list "message"(Redis Queue)
-            this.publisher.lPush("message", JSON.stringify({ clientId: id, message }));
+            this.publisher.lPush("message", JSON.stringify({
+                clientId: id,
+                message
+            }));
         });
     }
     getRandomClientId() {

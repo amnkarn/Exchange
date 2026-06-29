@@ -11,6 +11,7 @@ async function main() {
     console.log("Connected to redis");
 
     while(true) {
+        //infinitely pull message from redis queue
         const response = await redisClient.rPop("messaage" as string);
 
         if(!response) {
