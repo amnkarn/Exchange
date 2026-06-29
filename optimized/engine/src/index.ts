@@ -12,12 +12,15 @@ async function main() {
 
     while(true) {
         //infinitely pull message from redis queue
-        const response = await redisClient.rPop("messaage" as string);
+        const response = await redisClient.rPop(
+            "messaage", //queue name
+        );
 
         if(!response) {
             console.log("didn't get response");
         } else {
             engine.process(JSON.parse(response)); //send the req to engine
+            // { clientId: "x7f2k9m", message: { type: "CREATE_ORDER", ... } }
         }
     }
 }

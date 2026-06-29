@@ -28,7 +28,7 @@ export class Engine {
             console.log("No snapshot found", error);
         }
 
-        if (snapshot) {
+        if (snapshot) { //CRASH RECOVERY
             const snapShotSNAP = JSON.parse(snapshot.toString());
 
             this.orderBooks = snapShotSNAP.orderbooks.map((snapOB: any) => (
@@ -37,7 +37,8 @@ export class Engine {
 
             this.balances = new Map(snapShotSNAP.balances);
 
-        } else { //create a fresh fake orderBook
+        } else { //FRESH START
+            //create a fake orderBook
             this.orderBooks = [new Orderbook(`TATA`, [], [], 0, 0)];
             this.setBaseBalances();
         }
@@ -50,7 +51,7 @@ export class Engine {
     saveSnapShot() {
         const snapshotSnapshot = {
             orderbooks: this.orderBooks.map(o => o.getSnapshot()),
-            balances: Array.from(this.balances.entries()), //convert in array
+            balances: Array.from(this.balances.entries()), // Map → Array (to save in JSON)
         }
 
         fs.writeFile("./snapshot.json", JSON.stringify(snapshotSnapshot), () => {
@@ -59,7 +60,7 @@ export class Engine {
     }
     
 
-    process({ message, clientId }: {message: MessageFromApi, clientId: string}) {
+    process({ clientId, message }: { clientId: string, message: MessageFromApi}) {
         switch(message.type) {
             case CREATE_ORDER: 
                 try {
@@ -73,7 +74,7 @@ export class Engine {
                             fills
                         }
                     })
-                } catch (error) {
+                } catch (error) { //for any reason(insufficient fund), order is cancelled
                     console.log(error);
                     RedisManager.getInstanse().sendToApi(clientId, {
                         type: "ORDER_CANCELLED",
