@@ -19,7 +19,7 @@ type DB_MESSAGE = {
     type: typeof ORDER_UPDATE
     data: {
         orderId: string,
-        executedId: number,
+        executedQty: number,
         market?: string,
         price?: string,
         quantity?: string,
