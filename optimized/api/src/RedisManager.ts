@@ -39,10 +39,11 @@ export class RedisManager {
             })
 
             //push in list "message"(Redis Queue)
-            this.publisher.lPush("message", JSON.stringify({
-                clientId: id, 
-                message
-            }));
+            //send message to engine, with token number
+            this.publisher.lPush(
+                "message", //queue name
+                JSON.stringify({ clientId: id, message }
+            ));
         })
     }
 
