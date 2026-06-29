@@ -48,10 +48,12 @@ export class RedisManager {
         this.client.lPush("db_processor", JSON.stringify(message));
     }
 
+    //send engine's reply to ws(subscribed to the channel)
     public publishMessage(channel: string, message: WsMessage) {
         this.client.publish(channel, JSON.stringify(message));
     }
 
+    //send engine's reply to redis "clientId" channel
     public sendToApi(clientId: string, message: MessageToApi) {
         this.client.publish(clientId, JSON.stringify(message));
     }

@@ -10,6 +10,15 @@ interface UserBalance {
         available: number,
         locked: number,
     }
+    //  [BTC]: {
+    //      avilable: 4,
+    //      locked: 1,
+    //  }
+
+    //  [USD]: {
+    //      avilable: 75,
+    //      locked: 15,
+    //  }
 }
 
 export class Engine {
@@ -90,14 +99,12 @@ export class Engine {
             case CANCEL_ORDER: 
                 try {
                     const orderId = message.data.orderId;
-                    const cancelMarket = message.data.market;
-                    const cancelOrderbook = this.orderBooks.find(o => {
-                        o.ticker() === cancelMarket
-                    })
+                    const cancelMarket = message.data.market; //market name
+                    const cancelOrderbook = this.orderBooks.find(o => o.ticker() === cancelMarket); //OB
                     if(!cancelOrderbook) {
                         throw new Error("No Orderbook found");
                     }
-                    const quoteAsset = cancelMarket.split("_")[1];
+                    const quoteAsset = cancelMarket.split("_")[1]; //what you pay with("USD")
 
                     const order = cancelOrderbook.asks.find(o => o.orderId === orderId) || 
                                 cancelOrderbook.bids.find(o => o.orderId === orderId);
@@ -204,19 +211,15 @@ export class Engine {
         }
     }
 
-    addOrderBook(orderBook: Orderbook) {
-        this.orderBooks.push(orderBook);
-    }
-
     createOrder(market: string, price: string, quantity: string, side: "buy" | "sell", userId: string) {
         const orderbook = this.orderBooks.find(o => o.ticker() === market);
         if(!orderbook) {
             throw new Error("No orderbook found");
         }
-        const baseAsset = market.split("_")[0];
-        const quoteAsset = market.split("_")[1];
+        const baseAsset = market.split("_")[0]; //what you're trading
+        const quoteAsset = market.split("_")[1]; //what you pay with
         
-        this.checkAndLockFunds(baseAsset!, quoteAsset!, side, userId, quoteAsset!, price, quantity);
+        this.checkAndLockFunds(baseAsset!, quoteAsset!, side, userId, price, quantity);
 
         const order: Order = {
             price: Number(price),
@@ -227,13 +230,14 @@ export class Engine {
             userId,
         }
 
-        const { executedQty, fills } = orderbook.addOrder(order);
-        this.updateBalance(userId, baseAsset!, quoteAsset!, side, fills, executedQty);
+        const { executedQty, fills } = orderbook.addOrder(order); //match and add in orderBook
 
-        this.createDbTrades(fills, market, userId);
-        this.updateDbOrders(order, executedQty, fills, market);
-        this.publishWsDepthUpdates(fills, price, side, market);
-        this.publishWsTrades(fills, userId, market);
+        this.updateBalance(userId, baseAsset!, quoteAsset!, side, fills, executedQty); //update the balance
+
+        this.createDbTrades(fills, market, userId); //DB queue
+        this.updateDbOrders(order, executedQty, fills, market); //DB queue
+        this.publishWsDepthUpdates(fills, price, side, market); //WebSocket (depth table update)
+        this.publishWsTrades(fills, userId, market); //WebSocket (trade notification)
 
         return { executedQty, fills, orderId: order.orderId };
     }
@@ -358,62 +362,62 @@ export class Engine {
     updateBalance(userId: string, baseAseet: string, quoteAsset: string, side: "buy" | "sell", fills: Fill[], executedQty: number) {
         if(side === "buy") {
             fills.forEach(fill => {
-                //Update quote asset balance
+                //Seller(fill.otherUserId) will get USD
                 //@ts-ignore
-                this.balances.get(fill.otherUserId)[quoteAsset]?.available = this.balances.get(fill.otherUserId)[quoteAsset]?.available + (fill.quantity * fill.price);
-            
+                this.balances.get(fill.otherUserId)[quoteAsset]?.available += (fill.quantity * fill.price);
+                //Buyer locked balance will decrease
                 //@ts-ignore
-                this.balances.get(userId)[quoteAsset]?.locked = this.balances.get(userId)[quoteAsset]?.locked - (fill.quantity * fill.price);
+                this.balances.get(userId)[quoteAsset]?.locked -= (fill.quantity * fill.price);
 
-                //Update base asset balance
+                // Seller ke locked BTC shares transfer ho gaye
                 //@ts-ignore
-                this.balances.get(fill.otherUserId)[baseAseet]?.locked = this.balances.get(fill.otherUserId)[baseAseet]?.locked - fill.quantity;
-
+                this.balances.get(fill.otherUserId)[baseAseet]?.locked -= fill.quantity;
+                //Buyer receive's stoke
                 //@ts-ignore
-                this.balances.get(userId)[baseAseet]?.available = this.balances.get(userId)[baseAseet]?.available + fill.quantity;
+                this.balances.get(userId)[baseAseet]?.available += fill.quantity;
             })
 
         } else { //"sell"
             fills.forEach(fill => {
-                //update quote asset balance
+                //Buyer(fill.otherUserId) locked balanse will be decereased
                 //@ts-ignore
-                this.balances.get(fill.otherUserId)[quoteAsset]?.locked = this.balances.get(fill.otherUserId)[quoteAsset]?.locked - (fill.quantity * fill.price);
+                this.balances.get(fill.otherUserId)[quoteAsset]?.locked -= (fill.quantity * fill.price);
+                //Seller balanse will increase
+                //@ts-ignore
+                this.balances.get(userId)[quoteAsset]?.available += (fill.quantity * fill.price);
             
+                //stoke added in Buyer's balance
                 //@ts-ignore
-                this.balances.get(userId)[quoteAsset]?.available = this.balances.get(userId)[quoteAsset]?.available + (fill.quantity * fill.price);
-            
-                // Update base asset balance
+                this.balances.get(fill.otherUserId)[baseAseet]?.available += fill.quantity;
+                //stock redused from seller
                 //@ts-ignore
-                this.balances.get(fill.otherUserId)[baseAseet]?.available = this.balances.get(fill.otherUserId)[baseAseet]?.available + fill.quantity;
-
-                //@ts-ignore
-                this.balances.get(userId)[baseAseet]?.locked = this.balances.get(userId)[baseAseet]?.locked - (fill.quantity);
+                this.balances.get(userId)[baseAseet]?.locked -= fill.quantity;
             })
         }
     }
 
-    checkAndLockFunds(baseAsset: string, quoteAsset: string, side: "buy" | "sell", userId: string, asset: string, price: string, quantity: string) {
+    checkAndLockFunds(baseAsset: string, quoteAsset: string, side: "buy" | "sell", userId: string, price: string, quantity: string) {
         if(side === "buy") {
             if((this.balances.get(userId)?.[quoteAsset]?.available || 0) < Number(quantity) * Number(price)) {
                 throw new Error("Insufficient fund");
             }
 
+            // shift USD from available to locked
             //@ts-ignore
-            this.balances.get(userId)[quoteAsset]?.available = this.balances.get(userId)[quoteAsset]?.available - (Number(quantity) * Number(price))
-
+            this.balances.get(userId)[quoteAsset]?.available -= (Number(quantity) * Number(price));
             //@ts-ignore
-            this.balances.get(userId)[quoteAsset]?.locked = this.balances.get(userId)[quoteAsset]?.locked + (Number(price) * Number(quantity))
+            this.balances.get(userId)[quoteAsset]?.locked += (Number(quantity) * Number(price));
         
         } else { //"sell"
-            if((this.balances.get(userId)?.[quoteAsset]?.available || 0) < Number(quantity)) {
-                throw new Error("Insufficient fund");
+            if((this.balances.get(userId)?.[baseAsset]?.available || 0) < Number(quantity)) {
+                throw new Error("Insufficient stocks");
             }
 
+            //shift stock quantity from available to locked
             //@ts-ignore
-            this.balances.get(userId)[baseAsset]?.available = this.balances.get(userId)[baseAsset]?.available - Number(quantity);
-        
+            this.balances.get(userId)[baseAsset]?.available -= Number(quantity);
             //@ts-ignore
-            this.balances.get(userId)[baseAsset]?.locked = this.balances.get(userId)[baseAsset]?.locked + Number(quantity);
+            this.balances.get(userId)[baseAsset]?.locked += Number(quantity);
         }
     }
 
