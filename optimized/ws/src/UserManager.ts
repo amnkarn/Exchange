@@ -21,8 +21,8 @@ export class UserManager {
 
     public addUser(ws: any) {
         const id = this.getRandomId();
-        const user = new User(id, ws);
-        this.users.set(id, user);
+        const user = new User(id, ws); //create user
+        this.users.set(id, user); //add in users map
         this.registerOnClose(ws, id);
         
         return user;
@@ -30,8 +30,8 @@ export class UserManager {
 
     public registerOnClose(ws: WebSocket, id: string) {
         ws.on("close", () => {
-            this.users.delete(id);
-            SubscriptionManager.getInstanse().userLeft(id);
+            this.users.delete(id); //cleanup
+            SubscriptionManager.getInstanse().userLeft(id); //unsubscribe
         })
     }
 

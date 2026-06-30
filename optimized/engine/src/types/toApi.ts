@@ -19,7 +19,7 @@ export type MessageToApi = {
         executedQty: number,
         fills: {
             price: string,
-            qty: number,
+            quantity: number,
             tradeId: number
         }[]
     }

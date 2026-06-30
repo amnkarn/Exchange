@@ -1,4 +1,4 @@
-import { createClient, RedisClient, type RedisClientType } from "redis";
+import { createClient, type RedisClientType } from "redis";
 import { UserManager } from "./UserManager.js";
 
 

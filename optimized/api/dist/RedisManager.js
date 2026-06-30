@@ -14,7 +14,7 @@ export class RedisManager {
         this.client.connect();
         this.publisher.connect();
     }
-    //"Singleton patern"
+    //Singleton patern
     static getInstance() {
         if (!this.instance) {
             this.instance = new RedisManager();
@@ -24,16 +24,14 @@ export class RedisManager {
     sendAndAwait(message) {
         return new Promise((resolve) => {
             const id = this.getRandomClientId();
-            //engine will publish result on this id, and we will catch that msg
+            //BROWSER send req to API, API push message and id in queue(with the name of message), and ENGINE take req using rPop and publish the response on the clientId.
             this.client.subscribe(id, (message) => {
                 this.client.unsubscribe(id); //unsubscribe this id after any reply
                 resolve(JSON.parse(message));
             });
             //push in list "message"(Redis Queue)
-            this.publisher.lPush("message", JSON.stringify({
-                clientId: id,
-                message
-            }));
+            this.publisher.lPush("message", //queue name
+            JSON.stringify({ clientId: id, message }));
         });
     }
     getRandomClientId() {

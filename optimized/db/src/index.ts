@@ -16,7 +16,8 @@ async function main() {
     await redisClient.connect();
     console.log("connected to redis");
 
-    while(true) {
+    while(true) { //infinite loop
+        //pull message from redis queue
         const response = await redisClient.rPop("db_processor" as string);
         if(!response) {
             console.log("redis db_processor right pop failed");
@@ -32,7 +33,12 @@ async function main() {
                 const query = 'INSERT INTO tata_prices (time, price) VALUES ($1, $2)';
                 const values = [timeStamp, price];
                 await pgClient.query(query, values);
-            }
+            
+            } else if(data.type === "ORDER_UPDATE") {
+                console.log("updating trade");
+                console.log(data);
+                
+            } 
         }
     }
 }

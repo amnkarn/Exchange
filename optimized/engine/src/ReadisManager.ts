@@ -27,6 +27,8 @@ type DB_MESSAGE = {
     }
 }
 
+//We'll receive api req in index.ts from redis queue, and process it in engine and then send it to the api using received client id
+
 export class RedisManager {
     private client: RedisClientType;
     private static instanse: RedisManager;
@@ -44,6 +46,7 @@ export class RedisManager {
         return this.instanse;
     }
 
+    //push enige's reply to db queue(to "db_processor" channel)
     public pushMessage(message: DB_MESSAGE) {
         this.client.lPush("db_processor", JSON.stringify(message));
     }

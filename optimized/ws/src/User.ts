@@ -7,15 +7,15 @@ import { SUBSCRIBE, UNSUBSCRIBE, type IncommingMessage } from "./types/in.js";
 export class User {
     private id: string;
     private ws: WebSocket;
-    private subscriptions: string[] = [];
+    private subscriptions: string[] = []; //user intrested in channel's
 
     constructor(id: string, ws: WebSocket) {
         this.id = id;
         this.ws = ws;
-        this.addListeners();
+        this.addListeners(); //set `ws.on("message")`
     }
 
-    emit(message: OutgoingMessage) {
+    emit(message: OutgoingMessage) { //used to send msg to browser
         this.ws.send(JSON.stringify(message));
     }
 
@@ -32,6 +32,7 @@ export class User {
             const parsedMessage: IncommingMessage = JSON.parse(message);
 
             if(parsedMessage.method === SUBSCRIBE) {
+                //browser req to subscribe "trade@TATA_INR"
                 parsedMessage.params.forEach((s) => {
                     SubscriptionManager.getInstanse().subscribe(this.id, s);
                 })

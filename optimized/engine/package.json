@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tcs -b",
+    "build": "tsc -b",
     "start": "node ./dist/index.js",
     "dev": "pnpm build && pnpm start"
   },
@@ -17,7 +17,7 @@
   "dependencies": {
     "fs": "0.0.1-security",
     "redis": "^5.12.1",
-    "typescript": "^6.0.2"
+    "typescript": "^6.0.3"
   },
   "devDependencies": {
     "@types/node": "^25.6.0"
