@@ -1,7 +1,8 @@
 import axios from "axios";
 import { Depth, KLine, Ticker, Trade } from "./types"; //types
 
-const BASE_URL = "/api/proxy";
+//const BASE_URL = "/api/proxy";
+const BASE_URL = "http://localhost:3000/api/v1";
 
 // SOL_USDC -> SOLUSDC (Binance format)
 const toSymbol = (market: string) => market.replace("_", "");

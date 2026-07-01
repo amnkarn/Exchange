@@ -29,6 +29,8 @@ type DB_MESSAGE = {
 
 //We'll receive api req in index.ts from redis queue, and process it in engine and then send it to the api using received client id
 
+//Browser subscribe the ws and send the SUBSCRIBE AND UNSUBSCRIBE message through redisClient to the engine, then using publishMessage we'll send the engine's response to ws then ws send to client
+
 export class RedisManager {
     private client: RedisClientType;
     private static instanse: RedisManager;
