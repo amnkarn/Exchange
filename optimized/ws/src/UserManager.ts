@@ -7,9 +7,7 @@ export class UserManager {
     private static instanse: UserManager;
     private users: Map<string, User> = new Map();
 
-    constructor() {
-
-    }
+    constructor() {}
 
     public static getInstanse() {
         if(!this.instanse) {
@@ -28,9 +26,11 @@ export class UserManager {
         return user;
     }
 
+    //when websocket connection will close, do the cleanup
     public registerOnClose(ws: WebSocket, id: string) {
         ws.on("close", () => {
             this.users.delete(id); //cleanup
+            //jabhi bhi connection close hoga, tab "SubscriptionManager" me userLeft call kar dena
             SubscriptionManager.getInstanse().userLeft(id); //unsubscribe
         })
     }

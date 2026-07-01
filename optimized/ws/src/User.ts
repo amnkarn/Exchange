@@ -27,6 +27,7 @@ export class User {
         this.subscriptions = this.subscriptions.filter(s => s !== subscription);
     }
 
+    //when any msg will come to the user
     public addListeners() {
         this.ws.on("message", (message: string) => {
             const parsedMessage: IncommingMessage = JSON.parse(message);

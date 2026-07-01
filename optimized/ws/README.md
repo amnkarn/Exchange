@@ -16,3 +16,35 @@
    → User.emit() → ws.send(JSON.stringify(tradeData))
 
 5. Browser ke pास message aata hai → chart/orderbook UI live update hoti hai
+
+
+
+
+###
+1. Browser → ws connect karta hai
+             index.ts → UserManager.addUser(ws)
+             UserManager → new User(id, ws) banata hai, apni map mein rakhta hai
+
+2. Browser → SUBSCRIBE message bhejta hai { method: "SUBSCRIBE", params: ["trade@TATA_INR"] }
+             User ka ws.on("message") callback fire hota hai
+             → SubscriptionManager.subscribe(userId, "trade@TATA_INR")
+             → Internal maps update hoti hain
+             → Agar pehla subscriber hai → redisClient.subscribe("trade@TATA_INR", handler)
+             → Ab Redis sun raha hai us channel ko
+
+3. (Kahin alag — Engine service mein) Order match hota hai
+             Engine → RedisManager.publishMessage("trade@TATA_INR", tradeData)
+             → Engine ka Redis client publish karta hai
+
+4. Redis → SubscriptionManager ka redisCallbackHandler automatically fire
+             channel = "trade@TATA_INR"
+             reverseSubscriptions se userIds nikalo → ["userId1", "userId2"]
+             har userId ke liye → UserManager.getUser(id) → user.emit(data)
+             → ws.send() → Browser screen pe live update ✓
+
+5. Browser disconnect hota hai
+             ws.on("close") fire → UserManager.registerOnClose()
+             → users.delete(id)
+             → SubscriptionManager.userLeft(id)
+             → subscriptions se hata do
+             → agar last subscriber tha → redisClient.unsubscribe("trade@TATA_INR")
